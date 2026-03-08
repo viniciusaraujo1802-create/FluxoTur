@@ -1,6 +1,5 @@
 import streamlit as st
 import random
-import pandas as pd
 
 # Configuração inicial
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
@@ -42,7 +41,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÃO DO ALGORITMO MCDM ---
+# --- FUNÇÃO MCDM ---
 def calcular_score_mcdm(reputacao, cap_carga, transito):
     w1 = 3 if cap_carga == "Não Lotado" else -2
     w2 = 3 if transito == "Não Congestionado" else -2
@@ -52,18 +51,18 @@ def calcular_score_mcdm(reputacao, cap_carga, transito):
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
 
-# A INTERAÇÃO (Busca Inteligente)
+# CAMPO DE INTERAÇÃO (Estilo Calculadora)
 pesquisa = st.text_input("💬 O que você deseja fazer hoje? (ex: esporte, natureza, cultura)")
 
-# Filtro dos atrativos
-lista_filtrada = {n: d for n, d in atrativos_db.items() if pesquisa.lower() in d.lower() or pesquisa == ""}
+if pesquisa:
+    st.write(f"💬 **Consultor FluxoTur:** Que excelente escolha! Encontrei ótimas opções para **{pesquisa}**:")
+    lista_filtrada = {n: d for n, d in atrativos_db.items() if pesquisa.lower() in d.lower()}
+else:
+    lista_filtrada = atrativos_db
 
 st.markdown("---")
-st.header("Assistente de Roteiro Inteligente")
 
-if pesquisa: 
-    st.info(f"Mostrando resultados filtrados para: {pesquisa}")
-
+# GERADOR DE ROTA
 if st.button("🚀 Gerar Rota Otimizada"):
     ranking = []
     for nome, desc in lista_filtrada.items():
@@ -73,7 +72,10 @@ if st.button("🚀 Gerar Rota Otimizada"):
         score = calcular_score_mcdm(rep, cap, tra)
         ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Info": desc})
     
-    for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
-        with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
-            st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
-            st.write(f"**Descrição:** {item['Info']}")
+    if not ranking:
+        st.warning("Nenhum atrativo encontrado com esse termo.")
+    else:
+        for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
+            with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
+                st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
+                st.write(f"**Descrição:** {item['Info']}")
