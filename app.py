@@ -1,32 +1,36 @@
 import streamlit as st
 import random
+import base64
 
-# Configuração da página
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- CSS PARA O FUNDO E LEITURA ---
-def set_style():
-    # URL direta da sua imagem das Cataratas
-    bg_url = "https://files.fm/thumb_show.php?i=2k4txcan9j"
-    
-    st.markdown(f"""
-    <style>
-    .stApp {{
-        background-image: url("{bg_url}");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }}
-    /* Camada para garantir que o texto seja legível sobre a foto */
-    .stApp {{ background-color: rgba(255, 255, 255, 0.7); }}
-    div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.95); }}
-    h1, h2, h3, p, label {{ color: #000000 !important; font-weight: bold; }}
-    </style>
-    """, unsafe_allow_html=True)
+# --- CSS PARA O FUNDO ---
+def set_background(image_file):
+    try:
+        with open(image_file, "rb") as f:
+            img_data = f.read()
+        b64_encoded = base64.b64encode(img_data).decode()
+        st.markdown(f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{b64_encoded}");
+            background-size: cover;
+            background-attachment: fixed;
+        }}
+        .block-container {{
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 2rem;
+            border-radius: 10px;
+        }}
+        h1, h2, h3, p, label {{ color: #000000 !important; font-weight: bold; }}
+        </style>
+        """, unsafe_allow_html=True)
+    except:
+        pass
 
-set_style()
+set_background("foz.jpg")
 
-# --- BASE DE DADOS (33 Atrativos) ---
+# --- DADOS ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": "Esporte, kart indoor, profissional.",
     "Aguaray Eco": "Natureza, trilha, cachoeiras.",
@@ -63,7 +67,6 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÕES ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -76,20 +79,14 @@ def extrair_categoria(frase):
 # --- INTERFACE ---
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
-st.markdown("**Categorias disponíveis:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
-
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
-if pesquisa:
-    cat = extrair_categoria(pesquisa)
-    st.write(f"🔍 **Consultor FluxoTur:** Filtrando por **{cat}**:")
-    lista_exibir = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
-else:
-    lista_exibir = atrativos_db
+lista = {n: d for n, d in atrativos_db.items() if extrair_categoria(pesquisa).lower() in d.lower() or not pesquisa}
 
 if st.button("🚀 Gerar Rota Otimizada"):
-    for nome, desc in lista_exibir.items():
-        with st.expander(f"{nome}"):
-            st.write(f"**Descrição:** {desc}")
-            if "Kartódromo" in nome:
-                st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart Foz")
+    ranking = []
+    for nome, desc in lista.items():
+        score = round(random.uniform(1, 10), 1)
+        cap = random.choice(["Lotado", "Não Lotado"])
+        tra = random.choice(["Congestionado", "Não Congestionado"])
+        ranking.append({"nome": nome, "score": score, "cap": cap, "tra": tra, "desc": desc})
