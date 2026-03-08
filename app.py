@@ -19,20 +19,18 @@ def set_background(image_file):
             background-position: center;
             background-attachment: fixed;
         }}
-        /* Fundo branco semi-transparente para o conteúdo */
-        .stApp {{ background-color: rgba(255, 255, 255, 0.6); }}
+        .stApp {{ background-color: rgba(255, 255, 255, 0.7); }}
         div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.95); }}
-        h1, h2, h3, p {{ color: #000000; font-weight: bold; }}
+        h1, h2, h3, p, label {{ color: #000000 !important; font-weight: bold; }}
         </style>
         """
-        st.markdown(style, unsafe_allow_html=True)
+        st.markdown(style, unsafe_html=True)
     except:
-        st.info("Coloque sua foto como 'foz.jpg' na mesma pasta para o fundo aparecer.")
+        st.warning("Certifique-se que o arquivo 'foz.jpg' está na mesma pasta do código.")
 
-# Aplica a sua foto das Cataratas
 set_background("foz.jpg")
 
-# --- BASE DE DADOS ---
+# --- BASE DE DADOS (33 Atrativos) ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": "Esporte, kart indoor, profissional.",
     "Aguaray Eco": "Natureza, trilha, cachoeiras.",
@@ -69,7 +67,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- LÓGICA ---
+# --- FUNÇÕES ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -82,21 +80,20 @@ def extrair_categoria(frase):
 # --- INTERFACE ---
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
+st.markdown("**Categorias:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
 
-# Exibe as opções para o usuário não ficar perdido
-st.markdown("**Categorias disponíveis:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
     cat = extrair_categoria(pesquisa)
-    st.write(f"🔍 Filtrando por: **{cat}**")
-    lista_filtrada = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
+    st.write(f"🔍 Exibindo: **{cat}**")
+    lista_exibir = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
 else:
-    lista_filtrada = atrativos_db
+    lista_exibir = atrativos_db
 
 if st.button("🚀 Gerar Rota Otimizada"):
-    for nome, desc in lista_filtrada.items():
+    for nome, desc in lista_exibir.items():
         with st.expander(f"{nome}"):
             st.write(f"**Descrição:** {desc}")
             if "Kartódromo" in nome:
-                st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart")
+                st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart Foz")
