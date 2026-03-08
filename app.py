@@ -78,7 +78,7 @@ def extrair_intencao(texto):
 st.title("🌍 FluxoTur")
 st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
 st.markdown("---")
-st.markdown("Olá! Eu sou o **X.Tur**, a inteligência artificial da FluxoTur, especializada em otimizar roteiros com os atrativos de Foz do Iguaçu.")
+st.markdown("Olá! Eu sou o **X.Tur**, a inteligência artificial da **FluxoTur** especializada na otimização de roteiros com os atrativos de Foz do Iguaçu.")
 st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
 
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
