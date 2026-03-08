@@ -41,7 +41,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÃO DE MAPEAMENTO INTELIGENTE (NLP) ---
+# --- FUNÇÕES ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -51,7 +51,6 @@ def extrair_categoria(frase):
     if any(x in frase for x in ["experiência", "yoga", "wellness", "relaxar", "exclusivo", "pôr do sol", "nascer do sol", "bem-estar", "helicóptero", "vista", "panorâmica"]): return "Experiência"
     return "Geral"
 
-# --- FUNÇÃO MCDM ---
 def calcular_score_mcdm(reputacao, cap_carga, transito):
     w1 = 3 if cap_carga == "Não Lotado" else -2
     w2 = 3 if transito == "Não Congestionado" else -2
@@ -85,3 +84,7 @@ if st.button("🚀 Gerar Rota Otimizada"):
         with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
             st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
             st.write(f"**Descrição:** {item['Info']}")
+            
+            # Integração da Imagem no Kartódromo
+            if "Kartódromo" in item['Local']:
+                st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart Foz")
