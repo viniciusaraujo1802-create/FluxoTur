@@ -1,16 +1,12 @@
 import streamlit as st
 import random
+import pandas as pd
 
-st.set_page_config(page_title="FLUXOTUR", layout="wide")
+# Configuração inicial
+st.set_page_config(page_title="FLUXOTUR - Pesquisa Científica", layout="wide")
 
-st.title("🌍 FLUXOTUR")
-st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
-
-# ----------------------------
-# BASE COMPLETA – 33 ATRATIVOS
-# ----------------------------
-
-atrativos = {
+# --- BASE DE DADOS (Seus 33 Atrativos) ---
+atrativos_db = {
     "Kartódromo - Adrena Kart": "Kart indoor com pista profissional.",
     "Aguaray Eco": "Trilha ecológica com cachoeiras.",
     "Amanhecer nas Cataratas": "Experiência exclusiva ao nascer do sol.",
@@ -46,57 +42,90 @@ atrativos = {
     "Yup Star – Roda Gigante": "Roda gigante com vista panorâmica."
 }
 
-# ----------------------------
-# FUNÇÕES DA IA
-# ----------------------------
+# --- FUNÇÃO DO ALGORITMO MCDM ---
+def calcular_score_mcdm(reputacao, cap_carga, transito):
+    # Pesos w1 e w2 conforme Quadro 1 da metodologia
+    w1 = 3 if cap_carga == "Não Lotado" else -2
+    w2 = 3 if transito == "Não Congestionado" else -2
+    return reputacao + w1 + w2
 
-def gerar_variaveis():
-    dados = {}
-    for nome, descricao in atrativos.items():
-        dados[nome] = {
-            "capacidade": random.choice(["lotado", "não lotado"]),
-            "transito": random.choice(["congestionado", "não congestionado"]),
-            "reputacao": round(random.uniform(4.3, 4.9),1),
-            "descricao": descricao
-        }
-    return dados
+# --- INTERFACE EM ABAS ---
+st.title("🌍 FLUXOTUR")
+st.markdown("##### Protótipo de Sistema de Recomendação Multicritério (MCDM)")
 
+tab1, tab2, tab3, tab4 = st.tabs([
+    "🚀 Gerador de Rota", 
+    "🧪 Simulador de Impacto", 
+    "🚗 Diagnóstico de Mobilidade",
+    "📚 Fundamentação Teórica"
+])
 
-def calcular_score(d):
-    score = 0
-    score += 3 if d["capacidade"] == "não lotado" else -2
-    score += 3 if d["transito"] == "não congestionado" else -2
-    score += d["reputacao"]
-    return score
+# OPÇÃO 1: GERADOR DE ROTA (Seu código original melhorado)
+with tab1:
+    st.header("Assistente de Roteiro Inteligente")
+    limite = st.slider("Score mínimo para recomendação", 0, 15, 5)
+    
+    if st.button("🚀 Gerar Rota Otimizada"):
+        ranking = []
+        for nome, desc in atrativos_db.items():
+            cap = random.choice(["Lotado", "Não Lotado"])
+            tra = random.choice(["Congestionado", "Não Congestionado"])
+            rep = round(random.uniform(4.3, 4.9), 1)
+            score = calcular_score_mcdm(rep, cap, tra)
+            ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Rep": rep, "Info": desc})
+        
+        ranking_sorted = sorted(ranking, key=lambda x: x['Score'], reverse=True)
+        
+        for item in ranking_sorted:
+            if item['Score'] >= limite:
+                with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
+                    st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
+                    st.write(f"**O que fazer:** {item['Info']}")
 
+# OPÇÃO 2: SIMULADOR DE IMPACTO (Interatividade pura com a fórmula)
+with tab2:
+    st.header("Simulador de Sensibilidade Algorítmica")
+    st.info("Altere os parâmetros para validar a resposta do Score (S) em tempo real.")
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        s_rep = st.slider("Reputação Digital (R)", 4.3, 4.9, 4.6, step=0.1)
+        s_cap = st.select_slider("Capacidade de Carga (C)", options=["Lotado", "Não Lotado"])
+    with c2:
+        s_tra = st.select_slider("Fluxo de Trânsito (T)", options=["Congestionado", "Não Congestionado"])
+    
+    s_final = calcular_score_mcdm(s_rep, s_cap, s_tra)
+    st.metric("Score Final (S)", f"{s_final:.1f}")
+    
+    # Gráfico simples de barra para visualização
+    st.bar_chart({"Score": [s_final]})
 
-# ----------------------------
-# INTERFACE
-# ----------------------------
+# OPÇÃO 3: DIAGNÓSTICO DE MOBILIDADE (Foco na tomada de decisão)
+with tab3:
+    st.header("Diagnóstico de Mobilidade Urbana")
+    st.write("Simulação de atraso por congestionamento (T).")
+    tempo_normal = st.number_input("Tempo normal de trajeto (minutos)", 10, 60, 20)
+    tempo_gps = st.number_input("Tempo atual com tráfego (minutos)", 10, 100, 22)
+    
+    limiar = tempo_normal * 1.2
+    if tempo_gps > limiar:
+        st.error(f"ALERTA: Atraso de {((tempo_gps/tempo_normal)-1)*100:.1f}%. Local penalizado no ranking.")
+    else:
+        st.success("STATUS: Trânsito dentro da normalidade. Local bonificado.")
 
-st.sidebar.header("Configuração da Rota")
-limite_score = st.sidebar.slider("Score mínimo para recomendação", 0, 15, 5)
-
-if st.button("🚀 Gerar Rota Inteligente"):
-
-    dados = gerar_variaveis()
-    ranking = []
-
-    for nome, info in dados.items():
-        score = calcular_score(info)
-        ranking.append((nome, score, info))
-
-    ranking.sort(key=lambda x: x[1], reverse=True)
-
-    st.success("Rota otimizada para menor congestionamento")
-
-    for nome, score, info in ranking:
-        if score >= limite_score:
-            with st.container():
-                st.markdown(f"### {nome}")
-                st.write(f"Score: {round(score,2)}")
-                st.write(f"Capacidade: {info['capacidade']}")
-                st.write(f"Fluxo de Trânsito: {info['transito']}")
-                st.write(f"Reputação Digital: {info['reputacao']}")
-                st.write(f"O que fazer: {info['descricao']}")
-                st.markdown("---")
+# OPÇÃO 4: METODOLOGIA (O coração do seu artigo)
+with tab4:
+    st.header("Metodologia e Modelagem Matemática")
+    st.markdown(f"""
+    **Questão Problema:** Como a aplicação de um algoritmo MCDM auxilia viajantes sem roteiro?
+    
+    **A Fórmula:**
+    O Score final ($S$) é calculado como:
+    $$S = R + (C \\times w_1) + (T \\times w_2)$$
+    
+    **Critérios de Ponderação (Quadro 1):**
+    * **Ideal (Fluidez):** Peso +3
+    * **Atrito (Saturação):** Peso -2
+    
+    **Integridade do Modelo:** O sistema utiliza simulação de cenários (Rojo, 2006) para validar a sensibilidade da lógica.
+    """)
