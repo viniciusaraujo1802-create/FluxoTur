@@ -69,19 +69,27 @@ st.markdown("---")
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
-    cat_final = pesquisa.capitalize()
+    cat_busca = pesquisa.capitalize()
     mapeamento = {"Igreja": "Cultura", "Templo": "Cultura", "Mesquita": "Cultura"}
-    cat_final = mapeamento.get(cat_final, cat_final)
+    cat_final = mapeamento.get(cat_busca, cat_busca)
     
     resultados = {n: d for n, d in atrativos_db.items() if d['cat'].lower() == cat_final.lower()}
     
     if not resultados:
-        st.warning("X.TUR: Não encontrei atrativos para este critério.")
+        st.warning("X.TUR: Hmm, não encontrei algo específico para isso. Tente uma das categorias listadas acima!")
     else:
-        st.info(f"X.TUR: Analisando infraestrutura e reputação para: {cat_final}.")
+        st.info(random.choice([
+            f"X.TUR: Consultando a base de dados de atrativos para garantir a melhor experiência em {cat_final}...",
+            f"X.TUR: Analisando as melhores opções de {cat_final} para você...",
+            f"X.TUR: Iniciando varredura multicritério para {cat_final}."
+        ]))
         
         if st.button("🚀 Gerar roteiro inteligente"):
-            with st.spinner("X.TUR: Processando via MCDM..."):
+            with st.spinner(random.choice([
+                "X.TUR: Calculando o Score Final (S) via algoritmo MCDM...",
+                "X.TUR: Aplicando pesos de ajuste de reputação e tráfego em tempo real...",
+                "X.TUR: Otimizando o roteiro com base em dados de infraestrutura e satisfação..."
+            ])):
                 time.sleep(1.2)
                 ranking = []
                 for nome, info in resultados.items():
