@@ -1,10 +1,35 @@
 import streamlit as st
 import random
+import base64
 
-# Configuração inicial
+# --- CONFIGURAÇÃO DA PÁGINA ---
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- BASE DE DADOS (33 Atrativos) ---
+# --- FUNÇÃO DE ESTILO (Fundo personalizado) ---
+def set_background(image_file):
+    try:
+        with open(image_file, "rb") as f:
+            img_data = f.read()
+        b64_encoded = base64.b64encode(img_data).decode()
+        style = f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{b64_encoded}");
+            background-size: cover;
+            background-position: center;
+        }}
+        .stApp > header {{ background-color: transparent; }}
+        div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.85); }}
+        </style>
+        """
+        st.markdown(style, unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.warning("Imagem de fundo não encontrada. Verifique o nome do arquivo.")
+
+# Aplicar a imagem (Certifique-se que o arquivo foz.jpg está na pasta)
+set_background("foz.jpg")
+
+# --- BASE DE DADOS ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": "Esporte, kart indoor, profissional.",
     "Aguaray Eco": "Natureza, trilha, cachoeiras.",
@@ -41,7 +66,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÕES ---
+# --- FUNÇÕES LÓGICAS ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -60,11 +85,11 @@ def calcular_score_mcdm(reputacao, cap_carga, transito):
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
 
-pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Sugestões: Esporte, Natureza, Cultura, Lazer, Experiência)")
+pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
     cat = extrair_categoria(pesquisa)
-    st.write(f"💬 **Consultor FluxoTur:** Entendido! Buscando por opções de **{cat}** para você:")
+    st.write(f"💬 **Consultor FluxoTur:** Buscando opções de **{cat}**:")
     lista_filtrada = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
 else:
     lista_filtrada = atrativos_db
@@ -85,6 +110,6 @@ if st.button("🚀 Gerar Rota Otimizada"):
             st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
             st.write(f"**Descrição:** {item['Info']}")
             
-            # Integração da Imagem no Kartódromo
+            # Imagem específica para o Kartódromo
             if "Kartódromo" in item['Local']:
                 st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart Foz")
