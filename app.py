@@ -63,11 +63,17 @@ def calcular_score_mcdm(reputacao, carga_status, transito_status):
 # --- MAPA DE INTENÇÃO ---
 def extrair_intencao(texto):
     texto = texto.lower()
+    categorias_validas = ["natureza", "esporte", "cultura", "lazer", "experiência"]
+    
+    # Primeiro verifica se é uma categoria direta
+    if texto in categorias_validas:
+        return texto.capitalize()
+        
+    # Depois verifica palavras-chave
     mapeamento = {
         "pedalar": "Esporte", "bicicleta": "Esporte", "bike": "Esporte", "kart": "Esporte",
-        "navegar": "Lazer", "barco": "Lazer", "natureza": "Natureza", "cachoeira": "Natureza",
-        "cultura": "Cultura", "museu": "Cultura", "usina": "Cultura",
-        "experiência": "Experiência", "yoga": "Experiência", "pôr do sol": "Experiência"
+        "navegar": "Lazer", "barco": "Lazer", "cachoeira": "Natureza", "trilha": "Natureza",
+        "museu": "Cultura", "usina": "Cultura", "yoga": "Experiência", "pôr do sol": "Experiência"
     }
     for palavra, categoria in mapeamento.items():
         if palavra in texto:
@@ -86,17 +92,18 @@ pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 if st.button("🚀 Gerar roteiro inteligente"):
     cat_intencao = extrair_intencao(pesquisa)
     
-    if pesquisa and not cat_intencao:
-        st.warning("X.TUR: Não identifiquei uma intenção específica. Exibindo ranking geral para você:")
-        resultados = atrativos_db
-    elif not pesquisa:
+    # Se nada foi digitado, exibe tudo. Se foi digitado e não achou, avisa.
+    if not pesquisa:
         st.info("X.TUR: Processando o panorama completo de atrativos em Foz do Iguaçu...")
         resultados = atrativos_db
+    elif not cat_intencao:
+        st.warning("X.TUR: Não identifiquei uma categoria ou intenção específica. Exibindo ranking geral:")
+        resultados = atrativos_db
     else:
-        st.info(f"X.TUR: Analisando infraestrutura e reputação para o seu desejo de: **{cat_intencao}**.")
+        st.info(f"X.TUR: Analisando infraestrutura e reputação para: **{cat_intencao}**.")
         resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == cat_intencao}
 
-    with st.spinner("X.TUR: Rodando algoritmos MCDM e cruzando dados de carga/tráfego..."):
+    with st.spinner("X.TUR: Rodando algoritmos MCDM..."):
         time.sleep(1.2)
         ranking = []
         for nome, info in resultados.items():
