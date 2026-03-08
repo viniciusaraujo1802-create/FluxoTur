@@ -17,7 +17,7 @@ def set_style():
 
 set_style()
 
-# --- BASE DE DADOS COMPLETA (33 ATRATIVOS) ---
+# --- BASE DE DADOS COMPLETA ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "desc": "Kart indoor de alta velocidade."},
     "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "desc": "Trilhas em meio à mata e cachoeiras."},
@@ -66,52 +66,53 @@ def extrair_intencao(texto):
     mapeamento = {
         "pedalar": "Esporte", "bicicleta": "Esporte", "bike": "Esporte", "kart": "Esporte",
         "navegar": "Lazer", "barco": "Lazer", "natureza": "Natureza", "cachoeira": "Natureza",
-        "cultura": "Cultura", "lazer": "Lazer", "experiência": "Experiência"
+        "cultura": "Cultura", "museu": "Cultura", "usina": "Cultura",
+        "experiência": "Experiência", "yoga": "Experiência", "pôr do sol": "Experiência"
     }
-    # Retorna categoria apenas se a palavra chave estiver presente
     for palavra, categoria in mapeamento.items():
         if palavra in texto:
             return categoria
-    # Se for uma categoria direta, também aceita
-    if texto in ["natureza", "esporte", "cultura", "lazer", "experiência"]:
-        return texto.capitalize()
     return None
 
 # --- INTERFACE ---
 st.title("🌍 FluxoTur")
 st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-st.markdown("### 💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
 st.markdown("---")
+st.markdown("### Olá! Eu sou o **X.TUR**, sua Inteligência Artificial especializada em otimização de destinos turísticos.")
+st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
 
-pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
+pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Ou deixe em branco para ver tudo)")
 
-if pesquisa:
+if st.button("🚀 Gerar roteiro inteligente"):
     cat_intencao = extrair_intencao(pesquisa)
     
-    if not cat_intencao:
-        st.warning("X.TUR: Hmm, não encontrei algo específico para isso. Tente ser mais claro ou use uma das categorias listadas.")
+    if pesquisa and not cat_intencao:
+        st.warning("X.TUR: Não identifiquei uma intenção específica. Exibindo ranking geral para você:")
+        resultados = atrativos_db
+    elif not pesquisa:
+        st.info("X.TUR: Processando o panorama completo de atrativos em Foz do Iguaçu...")
+        resultados = atrativos_db
     else:
-        st.info(f"X.TUR: Analisando infraestrutura e reputação para: {cat_intencao}.")
+        st.info(f"X.TUR: Analisando infraestrutura e reputação para o seu desejo de: **{cat_intencao}**.")
+        resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == cat_intencao}
+
+    with st.spinner("X.TUR: Rodando algoritmos MCDM e cruzando dados de carga/tráfego..."):
+        time.sleep(1.2)
+        ranking = []
+        for nome, info in resultados.items():
+            c = random.choice([0, 1])
+            t = random.choice([0, 1])
+            s = calcular_score_mcdm(info['R'], c, t)
+            ranking.append({"nome": nome, "score": s, "c": c, "t": t, "R": info['R'], "desc": info['desc']})
         
-        if st.button("🚀 Gerar roteiro inteligente"):
-            resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == cat_intencao}
-            with st.spinner("X.TUR: Processando via MCDM..."):
-                time.sleep(1.2)
-                ranking = []
-                for nome, info in resultados.items():
-                    c = random.choice([0, 1])
-                    t = random.choice([0, 1])
-                    s = calcular_score_mcdm(info['R'], c, t)
-                    ranking.append({"nome": nome, "score": s, "c": c, "t": t, "R": info['R'], "desc": info['desc']})
-                
-                ranking.sort(key=lambda x: x['score'], reverse=True)
-                
-                st.success("X.TUR: Roteiro gerado com base na otimização MCDM:")
-                for item in ranking:
-                    status_c = "Não Lotado" if item['c'] == 1 else "Lotado"
-                    status_t = "Não Congestionado" if item['t'] == 1 else "Congestionado"
-                    st.markdown(f"### 📍 {item['nome']} (Score Final: {item['score']:.1f})")
-                    st.write(f"**O que fazer:** {item['desc']}")
-                    st.write(f"**Reputação Digital (R):** {item['R']} | **Condições:** {status_c} | {status_t}")
-                    st.markdown("---")
-                st.balloons()
+        ranking.sort(key=lambda x: x['score'], reverse=True)
+        
+        st.success("X.TUR: Roteiro gerado com sucesso!")
+        for item in ranking:
+            status_c = "Não Lotado" if item['c'] == 1 else "Lotado"
+            status_t = "Não Congestionado" if item['t'] == 1 else "Congestionado"
+            st.markdown(f"### 📍 {item['nome']} (Score Final: {item['score']:.1f})")
+            st.write(f"**O que fazer:** {item['desc']}")
+            st.write(f"**Reputação Digital (R):** {item['R']} | **Condições:** {status_c} | {status_t}")
+            st.markdown("---")
+        st.balloons()
