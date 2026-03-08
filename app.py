@@ -17,7 +17,7 @@ def set_style():
 
 set_style()
 
-# --- BASE DE DADOS ---
+# --- BASE DE DADOS COMPLETA (33 ATRATIVOS) ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "desc": "Kart indoor de alta velocidade."},
     "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "desc": "Trilhas em meio à mata e cachoeiras."},
@@ -54,36 +54,28 @@ atrativos_db = {
     "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "desc": "Vista panorâmica da tríplice fronteira."}
 }
 
-# --- LÓGICA DE INTENÇÃO (O coração da sua solicitação) ---
-def extrair_intencao(texto):
-    texto = texto.lower()
-    # Dicionário de mapeamento semântico rigoroso
-    mapeamento = {
-        "pedalar": "Esporte",
-        "bicicleta": "Esporte",
-        "bike": "Esporte",
-        "kart": "Esporte",
-        "navegar": "Lazer",
-        "barco": "Lazer",
-        "cachoeira": "Natureza",
-        "natureza": "Natureza",
-        "esporte": "Esporte",
-        "cultura": "Cultura",
-        "lazer": "Lazer",
-        "experiência": "Experiência"
-    }
-    
-    # Busca a palavra na intenção. Se não for específica e nem categoria, retorna None
-    for palavra, categoria in mapeamento.items():
-        if palavra in texto:
-            return categoria
-    return None
-
 # --- ALGORITMO MCDM ---
 def calcular_score_mcdm(reputacao, carga_status, transito_status):
     w_carga = 0.5 if carga_status == 1 else -0.5
     w_transito = 0.5 if transito_status == 1 else -0.5
     return round(reputacao + w_carga + w_transito, 2)
+
+# --- MAPA DE INTENÇÃO ---
+def extrair_intencao(texto):
+    texto = texto.lower()
+    mapeamento = {
+        "pedalar": "Esporte", "bicicleta": "Esporte", "bike": "Esporte", "kart": "Esporte",
+        "navegar": "Lazer", "barco": "Lazer", "natureza": "Natureza", "cachoeira": "Natureza",
+        "cultura": "Cultura", "lazer": "Lazer", "experiência": "Experiência"
+    }
+    # Retorna categoria apenas se a palavra chave estiver presente
+    for palavra, categoria in mapeamento.items():
+        if palavra in texto:
+            return categoria
+    # Se for uma categoria direta, também aceita
+    if texto in ["natureza", "esporte", "cultura", "lazer", "experiência"]:
+        return texto.capitalize()
+    return None
 
 # --- INTERFACE ---
 st.title("🌍 FluxoTur")
@@ -94,15 +86,15 @@ st.markdown("---")
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
-    categoria_encontrada = extrair_intencao(pesquisa)
+    cat_intencao = extrair_intencao(pesquisa)
     
-    if not categoria_encontrada:
-        st.warning("X.TUR: Não encontrei atrativos que correspondam à sua solicitação. Tente ser mais específico com categorias como 'pedalar', 'navegar' ou uma das categorias listadas.")
+    if not cat_intencao:
+        st.warning("X.TUR: Hmm, não encontrei algo específico para isso. Tente ser mais claro ou use uma das categorias listadas.")
     else:
-        st.info(f"X.TUR: Analisando infraestrutura e reputação para o seu desejo de: **{categoria_encontrada}**.")
+        st.info(f"X.TUR: Analisando infraestrutura e reputação para: {cat_intencao}.")
         
         if st.button("🚀 Gerar roteiro inteligente"):
-            resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == categoria_encontrada}
+            resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == cat_intencao}
             with st.spinner("X.TUR: Processando via MCDM..."):
                 time.sleep(1.2)
                 ranking = []
