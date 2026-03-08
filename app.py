@@ -62,17 +62,11 @@ def calcular_score_mcdm(reputacao, carga_status, transito_status):
 
 # --- INTERFACE ---
 st.title("🌍 FluxoTur")
-st.subheader("Sistema de Recomendação Inteligente - Foz do Iguaçu")
+st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
 
-# Descrição dos parâmetros MCDM
-with st.expander("ℹ️ Entenda o cálculo MCDM (Algoritmo X.TUR)"):
-    st.markdown("""
-    · **(Score Final):** Valor numérico da recomendação do atrativo.
-    · **(Reputação Digital):** Nota base extraída de avaliações de usuários (variando de 4.3 a 4.9).
-    · **(Capacidade de Carga):** Variável binária, onde 1 indica "Não Lotado" e 0 indica "Lotado".
-    · **(Fluxo de Trânsito):** Variável binária, onde 1 indica "Não Congestionado" e 0 indica "Congestionado".
-    Os pesos de ajuste variam conforme a fluidez ou saturação do cenário, penalizando ou bonificando a nota base.
-    """)
+# Categorias Visíveis
+st.markdown("### 💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
+st.markdown("---")
 
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
@@ -84,7 +78,7 @@ if pesquisa:
     resultados = {n: d for n, d in atrativos_db.items() if d['cat'].lower() == cat_final.lower()}
     
     if not resultados:
-        st.warning("X.TUR: Não encontrei atrativos para este critério.")
+        st.warning("X.TUR: Não encontrei atrativos para este critério. Tente as categorias listadas.")
     else:
         st.info(f"X.TUR: Analisando infraestrutura e reputação para: {cat_final}.")
         
@@ -105,6 +99,6 @@ if pesquisa:
                     status_c = "Não Lotado" if item['c'] == 1 else "Lotado"
                     status_t = "Não Congestionado" if item['t'] == 1 else "Congestionado"
                     st.markdown(f"### 📍 {item['nome']} (Score Final: {item['score']:.1f})")
-                    st.write(f"**Condições:** {status_c} | {status_t}")
+                    st.write(f"**Condições:** Capacidade ({status_c}) | Fluxo de Trânsito ({status_t})")
                     st.markdown("---")
                 st.balloons()
