@@ -4,31 +4,7 @@ import random
 # Configuração da página
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- CSS COM URL DIRETA (Garante o funcionamento no Cloud) ---
-def set_style():
-    # URL direta da imagem das Cataratas (hospedagem externa para evitar erros de leitura)
-    bg_url = "https://i.imgur.com/vH9Z1iE.jpg" 
-    
-    st.markdown(f"""
-    <style>
-    .stApp {{
-        background-image: url("{bg_url}");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }}
-    .block-container {{
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 2rem;
-        border-radius: 15px;
-    }}
-    h1, h2, h3, p, label {{ color: #000000 !important; font-weight: bold; }}
-    </style>
-    """, unsafe_allow_html=True)
-
-set_style()
-
-# --- DADOS ---
+# --- BASE DE DADOS (33 Atrativos) ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": "Esporte, kart indoor, profissional.",
     "Aguaray Eco": "Natureza, trilha, cachoeiras.",
@@ -65,6 +41,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
+# --- FUNÇÃO DE CATEGORIA ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
