@@ -2,7 +2,7 @@ import streamlit as st
 import random
 import time
 
-st.set_page_config(page_title="FLUXOTUR", layout="wide")
+st.set_page_config(page_title="X.TUR - FluxoTur", layout="wide")
 
 # --- CSS COM IMAGEM ---
 def set_style():
@@ -17,56 +17,67 @@ def set_style():
 
 set_style()
 
-# --- DADOS E LÓGICA ---
+# --- BASE DE DADOS COM REPUTAÇÃO DIGITAL (R) ---
 atrativos_db = {
-    "Kartódromo - Adrena Kart": "Esporte", "Aguaray Eco": "Natureza", "Amanhecer nas Cataratas": "Natureza",
-    "AquaFoz": "Cultura", "Aquamania": "Lazer", "Bike Poço Preto": "Esporte", "Blue Park": "Lazer",
-    "Cataratas del Iguazú – Argentina": "Natureza", "Cataratas do Iguaçu – Brasil": "Natureza",
-    "Céu das Cataratas": "Experiência", "Circuito São João": "Cultura", "Dreams Park Show": "Lazer",
-    "Falls Bike Tour": "Esporte", "Fly Foz – Paraquedismo": "Esporte", "Helisul Experience": "Experiência",
-    "Iguassu By Bike": "Esporte", "Iguassu River Tour": "Natureza", "Iguassu Secret Falls": "Natureza",
-    "Iguazu Wellness": "Experiência", "Itaipu Especial": "Cultura", "Itaipu Iluminada": "Cultura",
-    "Itaipu Panorâmica": "Cultura", "Itaipu Refúgio Biológico": "Natureza", "Kattamaram": "Lazer",
-    "Macuco Safari": "Esporte", "Marco das Três Fronteiras": "Cultura", "Mesquita Omar Ibn Al-Khattab": "Cultura",
-    "Parque das Aves": "Natureza", "Pôr do Sol nas Cataratas": "Natureza", "Templo Budista Chen Tien": "Cultura",
-    "Turismo Itaipu": "Cultura", "Wonder Park Foz": "Lazer", "Yup Star – Roda Gigante": "Lazer"
+    "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.6},
+    "Aguaray Eco": {"cat": "Natureza", "R": 4.8},
+    "Amanhecer nas Cataratas": {"cat": "Natureza", "R": 4.9},
+    "AquaFoz": {"cat": "Cultura", "R": 4.5},
+    "Aquamania": {"cat": "Lazer", "R": 4.4},
+    "Itaipu Especial": {"cat": "Cultura", "R": 4.7},
+    "Parque das Aves": {"cat": "Natureza", "R": 4.9},
+    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.3}
 }
 
-def filtrar_atrativos(termo):
-    mapeamento = {"Igreja": "Cultura", "Templo": "Cultura", "Mesquita": "Cultura"}
-    categoria_busca = mapeamento.get(termo.capitalize(), termo.capitalize())
-    return {n: c for n, c in atrativos_db.items() if categoria_busca.lower() == c.lower()}
+# --- LÓGICA DO ALGORITMO MCDM (X.TUR) ---
+def calcular_score_mcdm(reputacao, carga_status, transito_status):
+    # carga_status: 1 (Não Lotado), 0 (Lotado)
+    # transito_status: 1 (Não Congestionado), 0 (Congestionado)
+    # Fórmula: S = R + (C == 1 ? 0.5 : -0.5) + (T == 1 ? 0.5 : -0.5)
+    w_carga = 0.5 if carga_status == 1 else -0.5
+    w_transito = 0.5 if transito_status == 1 else -0.5
+    score = reputacao + w_carga + w_transito
+    return round(score, 2)
 
 # --- INTERFACE ---
-st.title("🌍 FLUXOTUR")
-st.subheader("Planejamento Inteligente de Roteiro")
-st.markdown("**Categorias:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
+st.title("🌍 X.TUR (FluxoTur)")
+st.subheader("Sistema de Recomendação Inteligente - Foz do Iguaçu")
 
-pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
+pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Natureza, Esporte, Cultura, Lazer, Experiência)")
 
 if pesquisa:
-    resultado = filtrar_atrativos(pesquisa)
-    if not resultado:
-        st.warning("IA: Hmm, não encontrei algo específico para isso. Tente uma das categorias listadas acima!")
+    # Filtragem precisa
+    termo = pesquisa.capitalize()
+    mapeamento = {"Igreja": "Cultura", "Templo": "Cultura", "Mesquita": "Cultura"}
+    cat_busca = mapeamento.get(termo, termo)
+    
+    resultados = {n: d for n, d in atrativos_db.items() if d['cat'].lower() == cat_busca.lower()}
+    
+    if not resultados:
+        st.warning("X.TUR: Não encontrei atrativos para este critério. Tente as categorias listadas.")
     else:
-        # Mensagens de IA
-        msgs_inicial = [
-            f"IA: Interessante! {pesquisa} é uma ótima escolha para Foz do Iguaçu.",
-            f"IA: Analisando as melhores opções de {pesquisa} para você...",
-            f"IA: Deixe-me ver o que temos de melhor em {pesquisa} para o seu roteiro."
-        ]
-        st.info(random.choice(msgs_inicial))
+        st.info(f"X.TUR: Analisando infraestrutura e reputação para: **{cat_busca}**.")
         
-        if st.button("🚀 Gerar Rota Otimizada"):
-            # Efeito de processamento
-            with st.spinner("IA: Cruzando dados de disponibilidade e clima... aguarde um segundo!"):
-                time.sleep(1.5) # Simula o processamento
-            
-            st.success(f"IA: Pronto! Encontrei {len(resultado)} opções incríveis para o seu perfil:")
-            
-            for nome, cat in resultado.items():
-                st.markdown(f"### 📍 {nome}")
-                st.write(f"**Categoria:** {cat}")
-                st.markdown("---")
-            
-            st.balloons() # Efeito visual extra de conclusão
+        if st.button("🚀 Gerar Rota Otimizada pelo Algoritmo"):
+            with st.spinner("X.TUR: Processando variáveis dinâmicas via MCDM..."):
+                time.sleep(1.5)
+                
+                # Cálculo do Ranking
+                ranking = []
+                for nome, info in resultados.items():
+                    c = random.choice([0, 1]) # 1: Não Lotado, 0: Lotado
+                    t = random.choice([0, 1]) # 1: Fluidez, 0: Atrito
+                    s = calcular_score_mcdm(info['R'], c, t)
+                    ranking.append({"nome": nome, "score": s, "c": c, "t": t})
+                
+                # Ordenação (Decrescente pelo Score S)
+                ranking.sort(key=lambda x: x['score'], reverse=True)
+                
+                st.success("X.TUR: Roteiro gerado com base na otimização MCDM:")
+                for item in ranking:
+                    status_c = "Não Lotado" if item['c'] == 1 else "Lotado"
+                    status_t = "Fluidez" if item['t'] == 1 else "Saturação"
+                    st.markdown(f"### 📍 {item['nome']} (Score Final S: {item['score']:.1f})")
+                    st.write(f"**Condições:** Capacidade ({status_c}) | Trânsito ({status_t})")
+                    st.markdown("---")
+                st.balloons()
