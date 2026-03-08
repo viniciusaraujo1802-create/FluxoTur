@@ -1,33 +1,30 @@
 import streamlit as st
 import random
 import base64
+import requests
 
-# --- CONFIGURAÇÃO DA PÁGINA ---
+# Configuração da página
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- FUNÇÃO DE ESTILO (Fundo personalizado) ---
-def set_background(image_file):
-    try:
-        with open(image_file, "rb") as f:
-            img_data = f.read()
-        b64_encoded = base64.b64encode(img_data).decode()
-        style = f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpeg;base64,{b64_encoded}");
-            background-size: cover;
-            background-position: center;
-        }}
-        .stApp > header {{ background-color: transparent; }}
-        div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.85); }}
-        </style>
-        """
-        st.markdown(style, unsafe_allow_html=True)
-    except FileNotFoundError:
-        st.warning("Imagem de fundo não encontrada. Verifique o nome do arquivo.")
+# --- FUNÇÃO DE FUNDO (Usando o link direto) ---
+def set_background(image_url):
+    # CSS injetado para aplicar a imagem de fundo
+    style = f"""
+    <style>
+    .stApp {{
+        background-image: url("{image_url}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }}
+    /* Fundo semi-transparente para os elementos para facilitar a leitura */
+    div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.9); }}
+    </style>
+    """
+    st.markdown(style, unsafe_allow_html=True)
 
-# Aplicar a imagem (Certifique-se que o arquivo foz.jpg está na pasta)
-set_background("foz.jpg")
+# Chamada com o link direto que você forneceu
+set_background("https://files.fm/thumb_show.php?i=2k4txcan9j")
 
 # --- BASE DE DADOS ---
 atrativos_db = {
@@ -66,7 +63,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÕES LÓGICAS ---
+# --- FUNÇÕES ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -89,7 +86,7 @@ pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
     cat = extrair_categoria(pesquisa)
-    st.write(f"💬 **Consultor FluxoTur:** Buscando opções de **{cat}**:")
+    st.write(f"💬 **Consultor FluxoTur:** Buscando por **{cat}**:")
     lista_filtrada = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
 else:
     lista_filtrada = atrativos_db
@@ -107,9 +104,8 @@ if st.button("🚀 Gerar Rota Otimizada"):
     
     for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
         with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
-            st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
+            st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Tráfego']}")
             st.write(f"**Descrição:** {item['Info']}")
             
-            # Imagem específica para o Kartódromo
             if "Kartódromo" in item['Local']:
                 st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart Foz")
