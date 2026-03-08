@@ -65,11 +65,9 @@ def extrair_intencao(texto):
     texto = texto.lower()
     categorias_validas = ["natureza", "esporte", "cultura", "lazer", "experiência"]
     
-    # Primeiro verifica se é uma categoria direta
     if texto in categorias_validas:
         return texto.capitalize()
         
-    # Depois verifica palavras-chave
     mapeamento = {
         "pedalar": "Esporte", "bicicleta": "Esporte", "bike": "Esporte", "kart": "Esporte",
         "navegar": "Lazer", "barco": "Lazer", "cachoeira": "Natureza", "trilha": "Natureza",
@@ -84,7 +82,7 @@ def extrair_intencao(texto):
 st.title("🌍 FluxoTur")
 st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
 st.markdown("---")
-st.markdown("Olá! Eu sou o **X.Tur**, a inteligência artificial da **FluxoTur** especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).")
+st.markdown("Olá! Eu sou o **X.Tur**, a inteligência artificial não generativa da **FluxoTur** especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).")
 st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
 
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
@@ -92,7 +90,6 @@ pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 if st.button("🚀 Gerar roteiro inteligente"):
     cat_intencao = extrair_intencao(pesquisa)
     
-    # Se nada foi digitado, exibe tudo. Se foi digitado e não achou, avisa.
     if not pesquisa:
         st.info("X.TUR: Processando o panorama completo de atrativos em Foz do Iguaçu...")
         resultados = atrativos_db
