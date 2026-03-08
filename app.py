@@ -41,7 +41,6 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÃO DE CATEGORIA ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -51,25 +50,31 @@ def extrair_categoria(frase):
     if any(x in frase for x in ["experiência", "yoga", "wellness", "relaxar", "exclusivo", "pôr do sol", "nascer do sol", "bem-estar", "helicóptero", "vista", "panorâmica"]): return "Experiência"
     return "Geral"
 
-# --- INTERFACE ---
+# --- INTERFACE INTERATIVA ---
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
-st.markdown("**Categorias:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
 
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
-if st.button("🚀 Gerar Rota Otimizada"):
-    lista = {n: d for n, d in atrativos_db.items() if extrair_categoria(pesquisa).lower() in d.lower() or not pesquisa}
+if pesquisa:
+    cat = extrair_categoria(pesquisa)
+    st.info(f"💡 Entendi! Você está buscando experiências focadas em: **{cat}**.")
     
-    ranking = []
-    for nome, desc in lista.items():
-        score = round(random.uniform(4.0, 5.0), 1)
-        cap = random.choice(["Lotado", "Não Lotado"])
-        tra = random.choice(["Congestionado", "Não Congestionado"])
-        ranking.append({"nome": nome, "score": score, "cap": cap, "tra": tra, "desc": desc})
-    
-    for item in sorted(ranking, key=lambda x: x['score'], reverse=True):
-        st.markdown(f"### {item['nome']} (Score: {item['score']:.1f})")
-        st.write(f"**Status:** {item['cap']} | **Tráfego:** {item['tra']}")
-        st.write(f"**Descrição:** {item['desc']}")
-        st.markdown("---")
+    if st.button("🚀 Gerar Rota Otimizada"):
+        with st.spinner("Analisando os melhores atrativos para você..."):
+            lista = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
+            
+            st.success(f"Encontrei {len(lista)} opções ideais para o seu perfil!")
+            
+            ranking = []
+            for nome, desc in lista.items():
+                score = round(random.uniform(4.0, 5.0), 1)
+                cap = random.choice(["Lotado", "Não Lotado"])
+                tra = random.choice(["Congestionado", "Não Congestionado"])
+                ranking.append({"nome": nome, "score": score, "cap": cap, "tra": tra, "desc": desc})
+            
+            for item in sorted(ranking, key=lambda x: x['score'], reverse=True):
+                st.markdown(f"### {item['nome']} (Score: {item['score']:.1f})")
+                st.write(f"**Status:** {item['cap']} | **Tráfego:** {item['tra']}")
+                st.write(f"**Descrição:** {item['desc']}")
+                st.markdown("---")
