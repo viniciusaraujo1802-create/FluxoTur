@@ -41,6 +41,16 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
+# --- FUNÇÃO DE MAPEAMENTO INTELIGENTE (NLP) ---
+def extrair_categoria(frase):
+    frase = frase.lower()
+    if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
+    if any(x in frase for x in ["esporte", "kart", "bike", "bicicleta", "cicloturismo", "paraquedismo", "adrenalina", "salto", "radical", "ativo", "exercício", "pedalar"]): return "Esporte"
+    if any(x in frase for x in ["cultura", "igreja", "templo", "mesquita", "história", "histórico", "técnico", "usina", "museu", "arquitetura", "religioso", "tradição", "cidade"]): return "Cultura"
+    if any(x in frase for x in ["lazer", "diversão", "parque aquático", "família", "criança", "passeio", "termal", "roda gigante", "show", "barco", "cruzeiro"]): return "Lazer"
+    if any(x in frase for x in ["experiência", "yoga", "wellness", "relaxar", "exclusivo", "pôr do sol", "nascer do sol", "bem-estar", "helicóptero", "vista", "panorâmica"]): return "Experiência"
+    return "Geral"
+
 # --- FUNÇÃO MCDM ---
 def calcular_score_mcdm(reputacao, cap_carga, transito):
     w1 = 3 if cap_carga == "Não Lotado" else -2
@@ -51,18 +61,17 @@ def calcular_score_mcdm(reputacao, cap_carga, transito):
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
 
-# INTERAÇÃO ATUALIZADA COM MAIS SUGESTÕES
 pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Sugestões: Esporte, Natureza, Cultura, Lazer, Experiência)")
 
 if pesquisa:
-    st.write(f"💬 **Consultor FluxoTur:** Que excelente escolha! Encontrei ótimas opções para **{pesquisa}**:")
-    lista_filtrada = {n: d for n, d in atrativos_db.items() if pesquisa.lower() in d.lower()}
+    cat = extrair_categoria(pesquisa)
+    st.write(f"💬 **Consultor FluxoTur:** Entendido! Buscando por opções de **{cat}** para você:")
+    lista_filtrada = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
 else:
     lista_filtrada = atrativos_db
 
 st.markdown("---")
 
-# GERADOR DE ROTA
 if st.button("🚀 Gerar Rota Otimizada"):
     ranking = []
     for nome, desc in lista_filtrada.items():
@@ -72,10 +81,7 @@ if st.button("🚀 Gerar Rota Otimizada"):
         score = calcular_score_mcdm(rep, cap, tra)
         ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Info": desc})
     
-    if not ranking:
-        st.warning("Nenhum atrativo encontrado com esse termo. Tente algo como 'Natureza' ou 'Esporte'.")
-    else:
-        for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
-            with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
-                st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
-                st.write(f"**Descrição:** {item['Info']}")
+    for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
+        with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
+            st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
+            st.write(f"**Descrição:** {item['Info']}")
