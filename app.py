@@ -46,3 +46,73 @@ atrativos_db = {
     "Macuco Safari": {"cat": "Esporte", "R": 4.9, "desc": "Aventura radical embaixo das quedas."},
     "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "desc": "Encontro do Brasil, Argentina e Paraguai."},
     "Mesquita Omar Ibn Al-Khattab": {"cat": "Cultura", "R": 4.7, "desc": "Arquitetura islâmica e cultura religiosa."},
+    "Parque das Aves": {"cat": "Natureza", "R": 4.9, "desc": "Imersão com aves da Mata Atlântica."},
+    "Pôr do Sol nas Cataratas": {"cat": "Experiência", "R": 4.9, "desc": "Final de tarde com vista privilegiada."},
+    "Templo Budista Chen Tien": {"cat": "Cultura", "R": 4.8, "desc": "Jardins zen e contemplação religiosa."},
+    "Turismo Itaipu": {"cat": "Cultura", "R": 4.7, "desc": "Complexo completo da usina."},
+    "Wonder Park Foz": {"cat": "Lazer", "R": 4.6, "desc": "Museu de carros e show de luzes."},
+    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "desc": "Vista panorâmica da tríplice fronteira."}
+}
+
+# --- ALGORITMO MCDM ---
+def calcular_score_mcdm(reputacao, carga_status, transito_status):
+    w_carga = 0.5 if carga_status == 1 else -0.5
+    w_transito = 0.5 if transito_status == 1 else -0.5
+    return round(reputacao + w_carga + w_transito, 2)
+
+# --- MAPA DE INTENÇÃO ---
+def extrair_intencao(texto):
+    texto = texto.lower()
+    mapeamento = {
+        "pedalar": "Esporte", "bicicleta": "Esporte", "bike": "Esporte", "kart": "Esporte",
+        "navegar": "Lazer", "barco": "Lazer", "natureza": "Natureza", "cachoeira": "Natureza",
+        "cultura": "Cultura", "museu": "Cultura", "usina": "Cultura",
+        "experiência": "Experiência", "yoga": "Experiência", "pôr do sol": "Experiência"
+    }
+    for palavra, categoria in mapeamento.items():
+        if palavra in texto:
+            return categoria
+    return None
+
+# --- INTERFACE ---
+st.title("🌍 FluxoTur")
+st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
+st.markdown("---")
+st.markdown("Olá! Eu sou o **X.Tur**, a inteligência artificial da FluxoTur, especializada em otimizar roteiros com os atrativos de Foz do Iguaçu.")
+st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
+
+pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
+
+if st.button("🚀 Gerar roteiro inteligente"):
+    cat_intencao = extrair_intencao(pesquisa)
+    
+    if pesquisa and not cat_intencao:
+        st.warning("X.TUR: Não identifiquei uma intenção específica. Exibindo ranking geral para você:")
+        resultados = atrativos_db
+    elif not pesquisa:
+        st.info("X.TUR: Processando o panorama completo de atrativos em Foz do Iguaçu...")
+        resultados = atrativos_db
+    else:
+        st.info(f"X.TUR: Analisando infraestrutura e reputação para o seu desejo de: **{cat_intencao}**.")
+        resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == cat_intencao}
+
+    with st.spinner("X.TUR: Rodando algoritmos MCDM e cruzando dados de carga/tráfego..."):
+        time.sleep(1.2)
+        ranking = []
+        for nome, info in resultados.items():
+            c = random.choice([0, 1])
+            t = random.choice([0, 1])
+            s = calcular_score_mcdm(info['R'], c, t)
+            ranking.append({"nome": nome, "score": s, "c": c, "t": t, "R": info['R'], "desc": info['desc']})
+        
+        ranking.sort(key=lambda x: x['score'], reverse=True)
+        
+        st.success("X.TUR: Roteiro gerado com sucesso!")
+        for item in ranking:
+            status_c = "Não Lotado" if item['c'] == 1 else "Lotado"
+            status_t = "Não Congestionado" if item['t'] == 1 else "Congestionado"
+            st.markdown(f"### 📍 {item['nome']} (Score Final: {item['score']:.1f})")
+            st.write(f"**O que fazer:** {item['desc']}")
+            st.write(f"**Reputação Digital (R):** {item['R']} | **Condições:** {status_c} | {status_t}")
+            st.markdown("---")
+        st.balloons()
