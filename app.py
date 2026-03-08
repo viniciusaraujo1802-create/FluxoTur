@@ -17,7 +17,7 @@ def set_style():
 
 set_style()
 
-# --- BASE DE DADOS COMPLETA (33 ATRATIVOS) ---
+# --- BASE DE DADOS ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "desc": "Kart indoor de alta velocidade."},
     "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "desc": "Trilhas em meio à mata e cachoeiras."},
@@ -54,6 +54,31 @@ atrativos_db = {
     "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "desc": "Vista panorâmica da tríplice fronteira."}
 }
 
+# --- LÓGICA DE INTENÇÃO (O coração da sua solicitação) ---
+def extrair_intencao(texto):
+    texto = texto.lower()
+    # Dicionário de mapeamento semântico rigoroso
+    mapeamento = {
+        "pedalar": "Esporte",
+        "bicicleta": "Esporte",
+        "bike": "Esporte",
+        "kart": "Esporte",
+        "navegar": "Lazer",
+        "barco": "Lazer",
+        "cachoeira": "Natureza",
+        "natureza": "Natureza",
+        "esporte": "Esporte",
+        "cultura": "Cultura",
+        "lazer": "Lazer",
+        "experiência": "Experiência"
+    }
+    
+    # Busca a palavra na intenção. Se não for específica e nem categoria, retorna None
+    for palavra, categoria in mapeamento.items():
+        if palavra in texto:
+            return categoria
+    return None
+
 # --- ALGORITMO MCDM ---
 def calcular_score_mcdm(reputacao, carga_status, transito_status):
     w_carga = 0.5 if carga_status == 1 else -0.5
@@ -69,27 +94,16 @@ st.markdown("---")
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
-    cat_busca = pesquisa.capitalize()
-    mapeamento = {"Igreja": "Cultura", "Templo": "Cultura", "Mesquita": "Cultura"}
-    cat_final = mapeamento.get(cat_busca, cat_busca)
+    categoria_encontrada = extrair_intencao(pesquisa)
     
-    resultados = {n: d for n, d in atrativos_db.items() if d['cat'].lower() == cat_final.lower()}
-    
-    if not resultados:
-        st.warning("X.TUR: Hmm, não encontrei algo específico para isso. Tente uma das categorias listadas acima!")
+    if not categoria_encontrada:
+        st.warning("X.TUR: Não encontrei atrativos que correspondam à sua solicitação. Tente ser mais específico com categorias como 'pedalar', 'navegar' ou uma das categorias listadas.")
     else:
-        st.info(random.choice([
-            f"X.TUR: Consultando a base de dados de atrativos para garantir a melhor experiência em {cat_final}...",
-            f"X.TUR: Analisando as melhores opções de {cat_final} para você...",
-            f"X.TUR: Iniciando varredura multicritério para {cat_final}."
-        ]))
+        st.info(f"X.TUR: Analisando infraestrutura e reputação para o seu desejo de: **{categoria_encontrada}**.")
         
         if st.button("🚀 Gerar roteiro inteligente"):
-            with st.spinner(random.choice([
-                "X.TUR: Calculando o Score Final (S) via algoritmo MCDM...",
-                "X.TUR: Aplicando pesos de ajuste de reputação e tráfego em tempo real...",
-                "X.TUR: Otimizando o roteiro com base em dados de infraestrutura e satisfação..."
-            ])):
+            resultados = {n: d for n, d in atrativos_db.items() if d['cat'] == categoria_encontrada}
+            with st.spinner("X.TUR: Processando via MCDM..."):
                 time.sleep(1.2)
                 ranking = []
                 for nome, info in resultados.items():
