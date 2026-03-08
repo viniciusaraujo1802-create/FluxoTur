@@ -1,30 +1,36 @@
 import streamlit as st
 import random
 import base64
-import requests
 
 # Configuração da página
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- FUNÇÃO DE FUNDO (Usando o link direto) ---
-def set_background(image_url):
-    # CSS injetado para aplicar a imagem de fundo
-    style = f"""
-    <style>
-    .stApp {{
-        background-image: url("{image_url}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
-    /* Fundo semi-transparente para os elementos para facilitar a leitura */
-    div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.9); }}
-    </style>
-    """
-    st.markdown(style, unsafe_allow_html=True)
+# --- FUNÇÃO DE ESTILO (Fundo Cataratas) ---
+def set_background(image_file):
+    try:
+        with open(image_file, "rb") as f:
+            img_data = f.read()
+        b64_encoded = base64.b64encode(img_data).decode()
+        style = f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/jpeg;base64,{b64_encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        /* Fundo branco semi-transparente para o conteúdo */
+        .stApp {{ background-color: rgba(255, 255, 255, 0.6); }}
+        div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.95); }}
+        h1, h2, h3, p {{ color: #000000; font-weight: bold; }}
+        </style>
+        """
+        st.markdown(style, unsafe_allow_html=True)
+    except:
+        st.info("Coloque sua foto como 'foz.jpg' na mesma pasta para o fundo aparecer.")
 
-# Chamada com o link direto que você forneceu
-set_background("https://files.fm/thumb_show.php?i=2k4txcan9j")
+# Aplica a sua foto das Cataratas
+set_background("foz.jpg")
 
 # --- BASE DE DADOS ---
 atrativos_db = {
@@ -63,7 +69,7 @@ atrativos_db = {
     "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
-# --- FUNÇÕES ---
+# --- LÓGICA ---
 def extrair_categoria(frase):
     frase = frase.lower()
     if any(x in frase for x in ["natureza", "trilha", "cachoeira", "eco", "parque", "selva", "árvore", "verde", "rio", "água", "refúgio", "biológico", "animal", "aves", "ao ar livre"]): return "Natureza"
@@ -73,39 +79,24 @@ def extrair_categoria(frase):
     if any(x in frase for x in ["experiência", "yoga", "wellness", "relaxar", "exclusivo", "pôr do sol", "nascer do sol", "bem-estar", "helicóptero", "vista", "panorâmica"]): return "Experiência"
     return "Geral"
 
-def calcular_score_mcdm(reputacao, cap_carga, transito):
-    w1 = 3 if cap_carga == "Não Lotado" else -2
-    w2 = 3 if transito == "Não Congestionado" else -2
-    return reputacao + w1 + w2
-
 # --- INTERFACE ---
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
 
+# Exibe as opções para o usuário não ficar perdido
+st.markdown("**Categorias disponíveis:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
     cat = extrair_categoria(pesquisa)
-    st.write(f"💬 **Consultor FluxoTur:** Buscando por **{cat}**:")
+    st.write(f"🔍 Filtrando por: **{cat}**")
     lista_filtrada = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
 else:
     lista_filtrada = atrativos_db
 
-st.markdown("---")
-
 if st.button("🚀 Gerar Rota Otimizada"):
-    ranking = []
     for nome, desc in lista_filtrada.items():
-        cap = random.choice(["Lotado", "Não Lotado"])
-        tra = random.choice(["Congestionado", "Não Congestionado"])
-        rep = round(random.uniform(4.3, 4.9), 1)
-        score = calcular_score_mcdm(rep, cap, tra)
-        ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Info": desc})
-    
-    for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
-        with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
-            st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Tráfego']}")
-            st.write(f"**Descrição:** {item['Info']}")
-            
-            if "Kartódromo" in item['Local']:
-                st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart Foz")
+        with st.expander(f"{nome}"):
+            st.write(f"**Descrição:** {desc}")
+            if "Kartódromo" in nome:
+                st.image("https://files.fm/thumb_show.php?i=ctv2gsd6ga", caption="Adrena Kart")
