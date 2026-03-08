@@ -4,7 +4,7 @@ import random
 # Configuração da página
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- BASE DE DADOS (33 Atrativos) ---
+# --- BASE DE DADOS ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": "Esporte, kart indoor, profissional.",
     "Aguaray Eco": "Natureza, trilha, cachoeiras.",
@@ -50,21 +50,29 @@ def extrair_categoria(frase):
     if any(x in frase for x in ["experiência", "yoga", "wellness", "relaxar", "exclusivo", "pôr do sol", "nascer do sol", "bem-estar", "helicóptero", "vista", "panorâmica"]): return "Experiência"
     return "Geral"
 
-# --- INTERFACE INTERATIVA ---
+# --- INTERFACE ---
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
+
+# Exibição fixa das opções
+st.markdown("""
+---
+### 💡 Você pode buscar por:
+**Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**
+---
+""")
 
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
     cat = extrair_categoria(pesquisa)
-    st.info(f"💡 Entendi! Você está buscando experiências focadas em: **{cat}**.")
+    st.info(f"🔍 Entendi! Estou filtrando sugestões para o seu interesse em: **{cat}**.")
     
     if st.button("🚀 Gerar Rota Otimizada"):
-        with st.spinner("Analisando os melhores atrativos para você..."):
+        with st.spinner("Buscando os melhores atrativos..."):
             lista = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
             
-            st.success(f"Encontrei {len(lista)} opções ideais para o seu perfil!")
+            st.success(f"Encontrei {len(lista)} opções ideais para você:")
             
             ranking = []
             for nome, desc in lista.items():
