@@ -24,7 +24,7 @@ atrativos_db = {
     "Iguassu By Bike": "Esporte, cicloturismo, urbano.",
     "Iguassu River Tour": "Natureza, barco, Rio Iguaçu.",
     "Iguassu Secret Falls": "Natureza, expedição, cachoeiras.",
-    "Iguazu Wellness": "Relaxamento, yoga, bem-estar.",
+    "Iguazu Wellness": "Experiência, yoga, bem-estar.",
     "Itaipu Especial": "Cultura, técnico, usina.",
     "Itaipu Iluminada": "Cultura, show, luzes.",
     "Itaipu Panorâmica": "Cultura, visita, usina.",
@@ -51,8 +51,8 @@ def calcular_score_mcdm(reputacao, cap_carga, transito):
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
 
-# CAMPO DE INTERAÇÃO (Estilo Calculadora)
-pesquisa = st.text_input("💬 O que você deseja fazer hoje? (ex: esporte, natureza, cultura)")
+# INTERAÇÃO ATUALIZADA COM MAIS SUGESTÕES
+pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Sugestões: Esporte, Natureza, Cultura, Lazer, Experiência)")
 
 if pesquisa:
     st.write(f"💬 **Consultor FluxoTur:** Que excelente escolha! Encontrei ótimas opções para **{pesquisa}**:")
@@ -73,7 +73,7 @@ if st.button("🚀 Gerar Rota Otimizada"):
         ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Info": desc})
     
     if not ranking:
-        st.warning("Nenhum atrativo encontrado com esse termo.")
+        st.warning("Nenhum atrativo encontrado com esse termo. Tente algo como 'Natureza' ou 'Esporte'.")
     else:
         for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
             with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
