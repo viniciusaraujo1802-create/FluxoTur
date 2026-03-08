@@ -5,127 +5,95 @@ import pandas as pd
 # Configuração inicial
 st.set_page_config(page_title="FLUXOTUR - Pesquisa Científica", layout="wide")
 
-# --- BASE DE DADOS (Seus 33 Atrativos) ---
+# --- BASE DE DADOS (33 Atrativos) ---
 atrativos_db = {
-    "Kartódromo - Adrena Kart": "Kart indoor com pista profissional.",
-    "Aguaray Eco": "Trilha ecológica com cachoeiras.",
-    "Amanhecer nas Cataratas": "Experiência exclusiva ao nascer do sol.",
-    "AquaFoz": "Aquário com espécies de água doce.",
-    "Aquamania": "Parque aquático com toboáguas.",
-    "Bike Poço Preto": "Cicloturismo dentro do Parque Nacional.",
-    "Blue Park": "Parque aquático com praia termal.",
-    "Cataratas del Iguazú – Argentina": "Lado argentino das Cataratas.",
-    "Cataratas do Iguaçu – Brasil": "Principal cartão postal brasileiro.",
-    "Céu das Cataratas": "Passeio aéreo exclusivo.",
-    "Circuito São João": "Passeio cultural regional.",
-    "Dreams Park Show": "Museu de cera, ice bar e atrações.",
-    "Falls Bike Tour": "Passeios guiados de bicicleta.",
-    "Fly Foz – Paraquedismo": "Salto duplo com vista panorâmica.",
-    "Helisul Experience": "Voo de helicóptero sobre as Cataratas.",
-    "Iguassu By Bike": "Cicloturismo urbano.",
-    "Iguassu River Tour": "Passeio de barco pelo Rio Iguaçu.",
-    "Iguassu Secret Falls": "Expedição para cachoeiras escondidas.",
-    "Iguazu Wellness": "Yoga e experiências de bem-estar.",
-    "Itaipu Especial": "Tour técnico aprofundado na usina.",
-    "Itaipu Iluminada": "Show noturno de luzes na barragem.",
-    "Itaipu Panorâmica": "Visita panorâmica à usina.",
-    "Itaipu Refúgio Biológico": "Área de conservação ambiental.",
-    "Kattamaram": "Passeio de barco no Lago de Itaipu.",
-    "Macuco Safari": "Passeio de barco nas quedas.",
-    "Marco das Três Fronteiras": "Encontro cultural de três países.",
-    "Mesquita Omar Ibn Al-Khattab": "Arquitetura islâmica aberta à visitação.",
-    "Parque das Aves": "Parque de conservação com viveiros imersivos.",
-    "Pôr do Sol nas Cataratas": "Experiência exclusiva ao entardecer.",
-    "Templo Budista Chen Tien": "Templo com esculturas e vista panorâmica.",
-    "Turismo Itaipu": "Centro oficial de visitação.",
-    "Wonder Park Foz": "Complexo com atrações interativas.",
-    "Yup Star – Roda Gigante": "Roda gigante com vista panorâmica."
+    "Kartódromo - Adrena Kart": "Esporte, kart indoor, profissional.",
+    "Aguaray Eco": "Natureza, trilha, cachoeiras.",
+    "Amanhecer nas Cataratas": "Natureza, experiência, exclusivo, sol.",
+    "AquaFoz": "Cultura, aquário, espécies.",
+    "Aquamania": "Lazer, parque aquático, toboáguas.",
+    "Bike Poço Preto": "Esporte, cicloturismo, natureza.",
+    "Blue Park": "Lazer, parque aquático, termal.",
+    "Cataratas del Iguazú – Argentina": "Natureza, turismo, Argentina.",
+    "Cataratas do Iguaçu – Brasil": "Natureza, turismo, principal.",
+    "Céu das Cataratas": "Experiência, aéreo, exclusivo.",
+    "Circuito São João": "Cultura, passeio, regional.",
+    "Dreams Park Show": "Lazer, museu, cera, atrações.",
+    "Falls Bike Tour": "Esporte, bicicleta, guiado.",
+    "Fly Foz – Paraquedismo": "Esporte, adrenalina, paraquedismo.",
+    "Helisul Experience": "Experiência, helicóptero, Cataratas.",
+    "Iguassu By Bike": "Esporte, cicloturismo, urbano.",
+    "Iguassu River Tour": "Natureza, barco, Rio Iguaçu.",
+    "Iguassu Secret Falls": "Natureza, expedição, cachoeiras.",
+    "Iguazu Wellness": "Relaxamento, yoga, bem-estar.",
+    "Itaipu Especial": "Cultura, técnico, usina.",
+    "Itaipu Iluminada": "Cultura, show, luzes.",
+    "Itaipu Panorâmica": "Cultura, visita, usina.",
+    "Itaipu Refúgio Biológico": "Natureza, conservação, ambiental.",
+    "Kattamaram": "Lazer, barco, Lago de Itaipu.",
+    "Macuco Safari": "Esporte, adrenalina, barco.",
+    "Marco das Três Fronteiras": "Cultura, encontro, três países.",
+    "Mesquita Omar Ibn Al-Khattab": "Cultura, arquitetura, religiosa.",
+    "Parque das Aves": "Natureza, conservação, aves.",
+    "Pôr do Sol nas Cataratas": "Natureza, experiência, pôr do sol.",
+    "Templo Budista Chen Tien": "Cultura, templo, budismo.",
+    "Turismo Itaipu": "Cultura, oficial, visita.",
+    "Wonder Park Foz": "Lazer, interativo, complexo.",
+    "Yup Star – Roda Gigante": "Lazer, roda gigante, vista."
 }
 
 # --- FUNÇÃO DO ALGORITMO MCDM ---
 def calcular_score_mcdm(reputacao, cap_carga, transito):
-    # Pesos w1 e w2 conforme Quadro 1 da metodologia
     w1 = 3 if cap_carga == "Não Lotado" else -2
     w2 = 3 if transito == "Não Congestionado" else -2
     return reputacao + w1 + w2
 
-# --- INTERFACE EM ABAS ---
+# --- INTERFACE ---
 st.title("🌍 FLUXOTUR")
-st.markdown("##### Protótipo de Sistema de Recomendação Multicritério (MCDM)")
+st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
+
+# A INTERAÇÃO (Busca Inteligente)
+pesquisa = st.text_input("💬 O que você deseja fazer hoje? (ex: esporte, natureza, cultura)")
+
+# Filtro dos 33 atrativos
+lista_filtrada = {n: d for n, d in atrativos_db.items() if pesquisa.lower() in d.lower() or pesquisa == ""}
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🚀 Gerador de Rota", 
-    "🧪 Simulador de Impacto", 
-    "🚗 Diagnóstico de Mobilidade",
-    "📚 Fundamentação Teórica"
+    "🚀 Gerador de Rota", "🧪 Simulador de Impacto", "🚗 Diagnóstico de Mobilidade", "📚 Fundamentação Teórica"
 ])
 
-# OPÇÃO 1: GERADOR DE ROTA (Seu código original melhorado)
 with tab1:
     st.header("Assistente de Roteiro Inteligente")
-    limite = st.slider("Score mínimo para recomendação", 0, 15, 5)
+    if pesquisa: st.info(f"Mostrando resultados filtrados para: {pesquisa}")
     
     if st.button("🚀 Gerar Rota Otimizada"):
         ranking = []
-        for nome, desc in atrativos_db.items():
+        for nome, desc in lista_filtrada.items():
             cap = random.choice(["Lotado", "Não Lotado"])
             tra = random.choice(["Congestionado", "Não Congestionado"])
             rep = round(random.uniform(4.3, 4.9), 1)
             score = calcular_score_mcdm(rep, cap, tra)
-            ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Rep": rep, "Info": desc})
+            ranking.append({"Local": nome, "Score": score, "Capacidade": cap, "Trânsito": tra, "Info": desc})
         
-        ranking_sorted = sorted(ranking, key=lambda x: x['Score'], reverse=True)
-        
-        for item in ranking_sorted:
-            if item['Score'] >= limite:
-                with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
-                    st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
-                    st.write(f"**O que fazer:** {item['Info']}")
+        for item in sorted(ranking, key=lambda x: x['Score'], reverse=True):
+            with st.expander(f"{item['Local']} - Score: {item['Score']:.1f}"):
+                st.write(f"**Status:** {item['Capacidade']} | **Tráfego:** {item['Trânsito']}")
+                st.write(f"**Descrição:** {item['Info']}")
 
-# OPÇÃO 2: SIMULADOR DE IMPACTO (Interatividade pura com a fórmula)
 with tab2:
-    st.header("Simulador de Sensibilidade Algorítmica")
-    st.info("Altere os parâmetros para validar a resposta do Score (S) em tempo real.")
-    
-    c1, c2 = st.columns(2)
-    with c1:
-        s_rep = st.slider("Reputação Digital (R)", 4.3, 4.9, 4.6, step=0.1)
-        s_cap = st.select_slider("Capacidade de Carga (C)", options=["Lotado", "Não Lotado"])
-    with c2:
-        s_tra = st.select_slider("Fluxo de Trânsito (T)", options=["Congestionado", "Não Congestionado"])
-    
-    s_final = calcular_score_mcdm(s_rep, s_cap, s_tra)
-    st.metric("Score Final (S)", f"{s_final:.1f}")
-    
-    # Gráfico simples de barra para visualização
-    st.bar_chart({"Score": [s_final]})
+    st.header("Simulador de Sensibilidade")
+    s_rep = st.slider("Reputação Digital (R)", 4.3, 4.9, 4.6, step=0.1)
+    s_cap = st.select_slider("Capacidade (C)", options=["Lotado", "Não Lotado"])
+    s_tra = st.select_slider("Trânsito (T)", options=["Congestionado", "Não Congestionado"])
+    st.metric("Score Final (S)", f"{calcular_score_mcdm(s_rep, s_cap, s_tra):.1f}")
 
-# OPÇÃO 3: DIAGNÓSTICO DE MOBILIDADE (Foco na tomada de decisão)
 with tab3:
-    st.header("Diagnóstico de Mobilidade Urbana")
-    st.write("Simulação de atraso por congestionamento (T).")
-    tempo_normal = st.number_input("Tempo normal de trajeto (minutos)", 10, 60, 20)
-    tempo_gps = st.number_input("Tempo atual com tráfego (minutos)", 10, 100, 22)
-    
-    limiar = tempo_normal * 1.2
-    if tempo_gps > limiar:
-        st.error(f"ALERTA: Atraso de {((tempo_gps/tempo_normal)-1)*100:.1f}%. Local penalizado no ranking.")
-    else:
-        st.success("STATUS: Trânsito dentro da normalidade. Local bonificado.")
+    st.header("Diagnóstico de Mobilidade")
+    tempo_normal = st.number_input("Tempo normal (min)", 10, 60, 20)
+    tempo_gps = st.number_input("Tempo atual (min)", 10, 100, 22)
+    if tempo_gps > (tempo_normal * 1.2): st.error("Status: Congestionado")
+    else: st.success("Status: Fluido")
 
-# OPÇÃO 4: METODOLOGIA (O coração do seu artigo)
 with tab4:
-    st.header("Metodologia e Modelagem Matemática")
-    st.markdown(f"""
-    **Questão Problema:** Como a aplicação de um algoritmo MCDM auxilia viajantes sem roteiro?
-    
-    **A Fórmula:**
-    O Score final ($S$) é calculado como:
-    $$S = R + (C \\times w_1) + (T \\times w_2)$$
-    
-    **Critérios de Ponderação (Quadro 1):**
-    * **Ideal (Fluidez):** Peso +3
-    * **Atrito (Saturação):** Peso -2
-    
-    **Integridade do Modelo:** O sistema utiliza simulação de cenários (Rojo, 2006) para validar a sensibilidade da lógica.
-    """)
+    st.header("Metodologia Científica")
+    st.markdown("$$S = R + (C \\times w_1) + (T \\times w_2)$$")
