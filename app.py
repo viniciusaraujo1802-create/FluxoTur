@@ -1,34 +1,30 @@
 import streamlit as st
 import random
-import base64
 
 # Configuração da página
 st.set_page_config(page_title="FLUXOTUR", layout="wide")
 
-# --- FUNÇÃO DE ESTILO (Fundo Cataratas) ---
-def set_background(image_file):
-    try:
-        with open(image_file, "rb") as f:
-            img_data = f.read()
-        b64_encoded = base64.b64encode(img_data).decode()
-        style = f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpeg;base64,{b64_encoded}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
-        .stApp {{ background-color: rgba(255, 255, 255, 0.7); }}
-        div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.95); }}
-        h1, h2, h3, p, label {{ color: #000000 !important; font-weight: bold; }}
-        </style>
-        """
-        st.markdown(style, unsafe_html=True)
-    except:
-        st.warning("Certifique-se que o arquivo 'foz.jpg' está na mesma pasta do código.")
+# --- CSS PARA O FUNDO E LEITURA ---
+def set_style():
+    # URL direta da sua imagem das Cataratas
+    bg_url = "https://files.fm/thumb_show.php?i=2k4txcan9j"
+    
+    st.markdown(f"""
+    <style>
+    .stApp {{
+        background-image: url("{bg_url}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+    /* Camada para garantir que o texto seja legível sobre a foto */
+    .stApp {{ background-color: rgba(255, 255, 255, 0.7); }}
+    div[data-testid="stExpander"] {{ background-color: rgba(255, 255, 255, 0.95); }}
+    h1, h2, h3, p, label {{ color: #000000 !important; font-weight: bold; }}
+    </style>
+    """, unsafe_allow_html=True)
 
-set_background("foz.jpg")
+set_style()
 
 # --- BASE DE DADOS (33 Atrativos) ---
 atrativos_db = {
@@ -80,13 +76,13 @@ def extrair_categoria(frase):
 # --- INTERFACE ---
 st.title("🌍 FLUXOTUR")
 st.subheader("Planejamento Inteligente de Roteiro Turístico – Foz do Iguaçu")
-st.markdown("**Categorias:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
+st.markdown("**Categorias disponíveis:** *Natureza, Esporte, Cultura, Lazer, Experiência*")
 
 pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
 
 if pesquisa:
     cat = extrair_categoria(pesquisa)
-    st.write(f"🔍 Exibindo: **{cat}**")
+    st.write(f"🔍 **Consultor FluxoTur:** Filtrando por **{cat}**:")
     lista_exibir = {n: d for n, d in atrativos_db.items() if cat.lower() in d.lower() or cat == "Geral"}
 else:
     lista_exibir = atrativos_db
