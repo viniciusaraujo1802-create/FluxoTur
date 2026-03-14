@@ -7,7 +7,7 @@ from math import radians, sin, cos, sqrt, atan2
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# ---------------- CSS PARA FUNDO COM PELÍCULA ----------------
+# ---------------- CSS PARA FUNDO, PELÍCULA E LEITURA ----------------
 st.markdown(
     f"""
     <style>
@@ -17,6 +17,11 @@ st.markdown(
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+    }}
+    /* Forçar texto em preto e negrito */
+    .stApp, .stMarkdown, .stText, .stTextInput, .stButton, p, h1, h2, h3, div, label, span {{
+        color: #000000 !important;
+        font-weight: bold !important;
     }}
     </style>
     """,
