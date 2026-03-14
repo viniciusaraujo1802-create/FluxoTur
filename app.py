@@ -157,13 +157,16 @@ with tab1:
             st.markdown("---")
 
 with tab2:
-    mapa = folium.Map(location=[-25.55, -54.58], zoom_start=11)
+    # Mapa otimizado para cobrir a região com zoom ajustado
+    mapa = folium.Map(location=[-25.58, -54.55], zoom_start=10)
+    
     for nome, item in atrativos_db.items():
         folium.Marker(
             [item["latitude"], item["longitude"]],
             popup=nome
         ).add_to(mapa)
-    st_folium(mapa, width=900, height=600)
+    
+    st_folium(mapa, use_container_width=True, height=600)
 
 with tab3:
     st.header("🧠 Entenda o FluxoTur")
