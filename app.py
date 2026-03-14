@@ -22,11 +22,12 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }}
-    /* Estilo do Botão: Texto branco e fundo preto */
+    /* Estilo do Botão: Fundo preto, texto branco e borda para destaque */
     div.stButton > button:first-child {{
+        background-color: #000000 !important; 
         color: #FFFFFF !important;
-        background-color: #000000 !important;
         font-weight: bold !important;
+        border: 2px solid #FFFFFF !important;
     }}
     </style>
     """,
@@ -122,44 +123,3 @@ with tab1:
         resultados = []
         for nome, item in atrativos_db.items():
             if not categoria_input or categoria_input.strip().lower() in item["cat"].lower():
-                reputacao = round(random.uniform(3.0, 4.9), 1)
-                transito = random.choice(["Intenso", "Não Intenso"])
-                capacidade = random.choice(["Lotado", "Não Lotado"])
-                
-                # Cálculo bruto
-                score_bruto = (reputacao * 2.0)
-                score_bruto += 1.0 if transito == "Não Intenso" else -1.0
-                score_bruto += 1.0 if capacidade == "Não Lotado" else -1.0
-
-                # Normalização para o intervalo [5.3, 10.5]
-                min_alvo, max_alvo = 5.3, 10.5
-                min_atual, max_atual = 4.0, 11.8
-                score_norm = min_alvo + ((score_bruto - min_atual) * (max_alvo - min_alvo) / (max_atual - min_atual))
-                score = round(max(min_alvo, min(max_alvo, score_norm)), 1)
-
-                resultados.append({
-                    "nome": nome, "score": score, "reputacao": reputacao,
-                    "transito": transito, "capacidade": capacidade, "item": item
-                })
-
-        resultados = sorted(resultados, key=lambda x: x["score"], reverse=True)
-        st.success(f"Aqui estão os {len(resultados)} locais encontrados")
-
-        for r in resultados:
-            st.markdown(f"### 📍 {r['nome']} ⭐ {r['score']}")
-            st.write(f"**Reputação Digital:** {r['reputacao']} | **Fluxo de Trânsito:** {r['transito']} | **Capacidade de Carga:** {r['capacidade']}")
-            st.info(f"💡 {r['item']['dica']}")
-            st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(r["nome"]))
-            st.markdown("---")
-
-with tab2:
-    mapa = folium.Map(location=[-25.58, -54.55], zoom_start=10)
-    for nome, item in atrativos_db.items():
-        folium.Marker([item["latitude"], item["longitude"]], popup=nome).add_to(mapa)
-    st_folium(mapa, use_container_width=True, height=600)
-
-with tab3:
-    st.header("🧠 Entenda a Inteligência do FluxoTur")
-    st.markdown("""
-    O FluxoTur foi concebido como uma ferramenta de apoio à decisão turística em tempo real, utilizando uma lógica de otimização ponderada que vai além de uma simples lista de atrativos. Diferente de sistemas convencionais, nosso algoritmo processa informações estruturadas para calcular o Índice de Otimização da Experiência, um valor que reflete o equilíbrio ideal entre qualidade, agilidade e conforto. Ao priorizar locais com reputações digitais elevadas enquanto ponderamos as condições atuais de trânsito e a capacidade de carga dos espaços, transformamos dados brutos em uma recomendação personalizada que visa maximizar o seu aproveitamento em Foz do Iguaçu.
-    """)
