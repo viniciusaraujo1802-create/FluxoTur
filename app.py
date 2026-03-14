@@ -5,7 +5,7 @@ import pandas as pd
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS (INCLUSO CONFORME SOLICITADO) ---
+# --- VLIBRAS (ESTRUTURA FORÇADA) ---
 def injetar_vlibras():
     vlibras_html = """
     <div vw class="enabled">
@@ -22,7 +22,7 @@ def injetar_vlibras():
         [vw] { position: fixed !important; bottom: 20px !important; right: 20px !important; z-index: 999999 !important; }
     </style>
     """
-    st.markdown(vlibras_html, unsafe_allow_html=True)
+    st.components.v1.html(vlibras_html, height=100) # Usando componente para garantir renderização
 
 injetar_vlibras()
 
@@ -82,9 +82,7 @@ with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
     st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
-    
     st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
-    
     pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
     
