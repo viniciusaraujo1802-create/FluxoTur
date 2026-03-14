@@ -7,12 +7,13 @@ from math import radians, sin, cos, sqrt, atan2
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# ---------------- CSS PARA FUNDO ----------------
+# ---------------- CSS PARA FUNDO COM PELÍCULA ----------------
 st.markdown(
     f"""
     <style>
     .stApp {{
-        background-image: url("https://i.ibb.co/cSzgTZ7x/download-1.jpg");
+        background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), 
+                    url("https://i.ibb.co/cSzgTZ7x/download-1.jpg");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -121,7 +122,6 @@ with tab1:
     if btn:
         resultados = []
         for nome, item in atrativos_db.items():
-            # Filtro por texto livre (case-insensitive)
             if not categoria_input or categoria_input.strip().lower() in item["cat"].lower():
                 score = round(random.uniform(5.3, 10.5), 1)
                 reputacao = round(random.uniform(3.0, 4.9), 1)
