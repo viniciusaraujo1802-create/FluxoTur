@@ -6,7 +6,6 @@ import pandas as pd
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
 # --- VLIBRAS (INCLUSO E AJUSTADO PARA VISIBILIDADE) ---
-# Esta função injeta o script diretamente no final do carregamento da página
 def injetar_vlibras():
     vlibras_html = """
     <div vw class="enabled">
@@ -20,10 +19,18 @@ def injetar_vlibras():
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
     <style>
-        [vw] { position: fixed !important; bottom: 20px !important; right: 20px !important; z-index: 9999 !important; }
+        /* Ajuste para garantir que o boneco fique visível e fixo no canto inferior direito */
+        [vw] { 
+            position: fixed !important; 
+            bottom: 30px !important; 
+            right: 30px !important; 
+            z-index: 99999999 !important; 
+        }
     </style>
     """
     st.markdown(vlibras_html, unsafe_allow_html=True)
+
+injetar_vlibras()
 
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
@@ -116,6 +123,3 @@ with tab3:
     O objetivo é transformar a complexidade logística do turismo em uma experiência fluida, eficiente e 
     personalizada para cada visitante que deseja explorar Foz do Iguaçu.
     """)
-
-# --- INJEÇÃO FINAL DO VLIBRAS ---
-injetar_vlibras()
