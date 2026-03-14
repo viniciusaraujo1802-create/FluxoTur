@@ -45,12 +45,10 @@ def injetar_vlibras():
     </div>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script>
-      window.onload = function() {
-        new window.VLibras.Widget('https://vlibras.gov.br/app');
-      }
+      new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
     """
-    st.components.v1.html(vlibras_html, height=0)
+    st.components.v1.html(vlibras_html, height=100)
 
 injetar_vlibras()
 
