@@ -5,7 +5,7 @@ import pandas as pd
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS (MÉTODO ASSÍNCRONO - SEM BIBLIOTECAS) ---
+# --- VLIBRAS (INCLUSO E AJUSTADO PARA VISIBILIDADE) ---
 def injetar_vlibras():
     vlibras_html = """
     <div vw class="enabled">
@@ -18,10 +18,22 @@ def injetar_vlibras():
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
+    <style>
+        /* Ajuste para garantir que o boneco fique visível e fixo no canto inferior direito */
+        [vw] { 
+            position: fixed !important; 
+            bottom: 30px !important; 
+            right: 30px !important; 
+            z-index: 99999999 !important; 
+        }
+    </style>
     """
-    # Usamos o st.components.v1 para carregar de forma isolada
-    import streamlit.components.v1 as components
-    components.html(vlibras_html, height=100)
+    st.markdown(vlibras_html, unsafe_allow_html=True)
+
+injetar_vlibras()
+
+def gerar_link_mapas(nome):
+    return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
 
 # --- CSS ---
 st.markdown("""
