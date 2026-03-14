@@ -6,13 +6,21 @@ import streamlit.components.v1 as components
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
+# --- VLIBRAS AJUSTADO ---
 def injetar_vlibras():
     vlibras_code = """
-    <div vw class="enabled"><div vw-access-button class="active"></div><div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
     """
-    components.html(vlibras_code, height=0)
+    components.html(vlibras_code, height=100)
 
 injetar_vlibras()
 
@@ -80,7 +88,7 @@ with tab1:
             lista_resultados = []
             for nome, info in atrativos_db.items():
                 if info['cat'].lower() == pesquisa.lower():
-                    # Cálculo dos indicadores
+                    # Escala 5.3 a 10.5
                     score = round(random.uniform(5.3, 10.5), 1)
                     c = random.choice(["Lotado", "Não Lotado"])
                     t = random.choice(["Intenso", "Não Intenso"])
@@ -88,7 +96,6 @@ with tab1:
                         "nome": nome, "score": score, "R": info['R'], "t": t, "c": c
                     })
             
-            # Ordenar do maior score para o menor
             lista_resultados.sort(key=lambda x: x['score'], reverse=True)
             
             for item in lista_resultados:
@@ -103,4 +110,5 @@ with tab2:
 
 with tab3:
     st.header("🧠 Entenda o FluxoTur")
+    st.write("Olá, eu sou o **X.Tur**!")
     st.write("A inteligência artificial não generativa diferencia-se por focar no exame e na categorização de dados pré-existentes para a formulação de previsões. Esta distinção é fundamental para sistemas que priorizam a precisão analítica sobre a criação de conteúdo, permitindo uma governança baseada em evidências estatísticas.")
