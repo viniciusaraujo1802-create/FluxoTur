@@ -1,7 +1,6 @@
 import streamlit as st
 import random
 import pandas as pd
-import streamlit.components.v1 as components
 
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
@@ -20,10 +19,15 @@ def injetar_vlibras():
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
     <style>
-        [vw] { position: fixed !important; bottom: 30px !important; right: 30px !important; z-index: 99999999 !important; }
+        [vw] { 
+            position: fixed !important; 
+            bottom: 30px !important; 
+            right: 30px !important; 
+            z-index: 99999999 !important; 
+        }
     </style>
     """
-    components.html(vlibras_html, height=100)
+    st.markdown(vlibras_html, unsafe_allow_html=True)
 
 injetar_vlibras()
 
@@ -39,75 +43,136 @@ h1, h2, h3, p, label { color: #000000 !important; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- BASE DE DADOS COMPLETA ---
+# --- BASE DE DADOS ---
 atrativos_db = {
-    "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "lat": -25.534, "lon": -54.545, "dica": "Prepare o capacete e acelere fundo!"},
-    "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "lat": -25.617, "lon": -54.484, "dica": "Renove as energias em trilhas."},
-    "Amanhecer nas Cataratas": {"cat": "Experiência", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Sol nascente nas águas."},
-    "AquaFoz": {"cat": "Cultura", "R": 4.6, "lat": -25.616, "lon": -54.481, "dica": "História e biodiversidade."},
-    "Aquamania": {"cat": "Lazer", "R": 4.4, "lat": -25.538, "lon": -54.542, "dica": "Diversão em família."},
-    "Bike Poço Preto": {"cat": "Esporte", "R": 4.7, "lat": -25.695, "lon": -54.436, "dica": "Pedale na floresta."},
-    "Blue Park": {"cat": "Lazer", "R": 4.5, "lat": -25.525, "lon": -54.548, "dica": "Praia termal em Foz."},
-    "Cataratas del Iguazú – Argentina": {"cat": "Natureza", "R": 4.9, "lat": -25.684, "lon": -54.444, "dica": "O lado hermano impressionante."},
-    "Cataratas do Iguaçu – Brasil": {"cat": "Natureza", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Garganta do Diabo."},
-    "Céu das Cataratas": {"cat": "Experiência", "R": 4.8, "lat": -25.695, "lon": -54.436, "dica": "Sabor nas alturas."},
-    "Circuito São João": {"cat": "Cultura", "R": 4.3, "lat": -25.510, "lon": -54.500, "dica": "Tradições locais."},
-    "Dreams Park Show": {"cat": "Lazer", "R": 4.5, "lat": -25.565, "lon": -54.502, "dica": "Um mundo mágico."},
-    "Falls Bike Tour": {"cat": "Esporte", "R": 4.6, "lat": -25.695, "lon": -54.436, "dica": "Vento no rosto."},
-    "Fly Foz – Paraquedismo": {"cat": "Esporte", "R": 4.9, "lat": -25.534, "lon": -54.545, "dica": "O céu de Foz te espera."},
-    "Helisul Experience": {"cat": "Experiência", "R": 4.9, "lat": -25.692, "lon": -54.438, "dica": "Vista aérea incrível."},
-    "Iguassu By Bike": {"cat": "Esporte", "R": 4.5, "lat": -25.550, "lon": -54.580, "dica": "Roteiros secretos."},
-    "Iguassu River Tour": {"cat": "Natureza", "R": 4.7, "lat": -25.690, "lon": -54.435, "dica": "Perspectiva privilegiada."},
-    "Iguassu Secret Falls": {"cat": "Natureza", "R": 4.8, "lat": -25.550, "lon": -54.550, "dica": "Cachoeiras escondidas."},
-    "Iguazu Wellness": {"cat": "Experiência", "R": 4.7, "lat": -25.560, "lon": -54.520, "dica": "Bem-estar total."},
-    "Itaipu Especial": {"cat": "Cultura", "R": 4.8, "lat": -25.405, "lon": -54.588, "dica": "Visita técnica épica."},
-    "Itaipu Iluminada": {"cat": "Cultura", "R": 4.7, "lat": -25.405, "lon": -54.588, "dica": "Show de luzes."},
-    "Itaipu Panorâmica": {"cat": "Cultura", "R": 4.6, "lat": -25.405, "lon": -54.588, "dica": "Vista monumental."},
-    "Itaipu Refúgio Biológico": {"cat": "Natureza", "R": 4.7, "lat": -25.410, "lon": -54.550, "dica": "Preservação local."},
-    "Kattamaram": {"cat": "Lazer", "R": 4.5, "lat": -25.405, "lon": -54.588, "dica": "Navegue pelo lago."},
-    "Macuco Safari": {"cat": "Esporte", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Muita emoção!"},
-    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "lat": -25.603, "lon": -54.599, "dica": "Brasil, Argentina e Paraguai."},
-    "Mesquita Omar Ibn Al-Khattab": {"cat": "Cultura", "R": 4.7, "lat": -25.535, "lon": -54.575, "dica": "Arquitetura linda."},
-    "Parque das Aves": {"cat": "Natureza", "R": 4.9, "lat": -25.617, "lon": -54.484, "dica": "Vida tropical."},
-    "Pôr do Sol nas Cataratas": {"cat": "Experiência", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Encerramento mágico."},
-    "Templo Budista Chen Tien": {"cat": "Cultura", "R": 4.8, "lat": -25.534, "lon": -54.550, "dica": "Paz interior."},
-    "Turismo Itaipu": {"cat": "Cultura", "R": 4.7, "lat": -25.405, "lon": -54.588, "dica": "Segredos da usina."},
-    "Wonder Park Foz": {"cat": "Lazer", "R": 4.6, "lat": -25.550, "lon": -54.540, "dica": "Show tecnológico."},
-    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "lat": -25.600, "lon": -54.600, "dica": "Visão inesquecível."}
+    "Kartódromo - Adrena Kart": {"cat": "Esporte", "latitude": -25.534, "longitude": -54.545, "dica": "Prepare o capacete e acelere fundo nesta pista de elite!"},
+    "Aguaray Eco": {"cat": "Natureza", "latitude": -25.617, "longitude": -54.484, "dica": "O refúgio perfeito para renovar as energias em trilhas selvagens."},
+    "Amanhecer nas Cataratas": {"cat": "Experiência", "latitude": -25.695, "longitude": -54.436, "dica": "Um privilégio único: ver o sol nascer sobre as quedas d'água."},
+    "AquaFoz": {"cat": "Cultura", "latitude": -25.616, "longitude": -54.481, "dica": "Mergulhe fundo na história viva da nossa biodiversidade local."},
+    "Aquamania": {"cat": "Lazer", "latitude": -25.538, "longitude": -54.542, "dica": "Splash! O lugar ideal para dar risada com toda a família."},
+    "Bike Poço Preto": {"cat": "Esporte", "latitude": -25.695, "longitude": -54.436, "dica": "Pedale pelo coração da floresta e sinta a vida selvagem de perto."},
+    "Blue Park": {"cat": "Lazer", "latitude": -25.525, "longitude": -54.548, "dica": "Água quentinha e diversão sem fim na praia termal de Foz."},
+    "Cataratas del Iguazú – Argentina": {"cat": "Natureza", "latitude": -25.684, "longitude": -54.444, "dica": "Prepare-se para ficar impressionado com o lado hermano das cataratas!"},
+    "Cataratas do Iguaçu – Brasil": {"cat": "Natureza", "latitude": -25.695, "longitude": -54.436, "dica": "A clássica e inesquecível Garganta do Diabo espera por você."},
+    "Dreams Park Show": {"cat": "Lazer", "latitude": -25.565, "longitude": -54.502, "dica": "Um mundo mágico onde a imaginação ganha vida em cada museu."},
+    "Fly Foz – Paraquedismo": {"cat": "Esporte", "latitude": -25.534, "longitude": -54.545, "dica": "Se tem coragem, o céu de Foz é o seu melhor destino hoje!"},
+    "Helisul Experience": {"cat": "Experiência", "latitude": -25.692, "longitude": -54.438, "dica": "Voe alto e tenha a melhor foto aérea da sua vida."},
+    "Itaipu Panorâmica": {"cat": "Cultura", "latitude": -25.405, "longitude": -54.588, "dica": "A vista clássica que mostra o tamanho monumental dessa obra."},
+    "Macuco Safari": {"cat": "Esporte", "latitude": -25.695, "longitude": -54.436, "dica": "Se prepare para se molhar e gritar de tanta emoção!"},
+    "Marco das Três Fronteiras": {"cat": "Cultura", "latitude": -25.603, "longitude": -54.599, "dica": "O encontro simbólico entre Brasil, Argentina e Paraguai."},
+    "Mesquita Omar Ibn Al-Khattab": {"cat": "Cultura", "latitude": -25.535, "longitude": -54.575, "dica": "Uma joia arquitetônica que traz o oriente para o coração de Foz."},
+    "Parque das Aves": {"cat": "Natureza", "latitude": -25.617, "longitude": -54.484, "dica": "Entre no viveiro e sinta a vida das aves tropicais ao redor."},
+    "Templo Budista Chen Tien": {"cat": "Cultura", "latitude": -25.534, "longitude": -54.550, "dica": "Encontre a paz interior entre centenas de estátuas serenas."},
+    "Wonder Park Foz": {"cat": "Lazer", "latitude": -25.550, "longitude": -54.540, "dica": "Cinema de alta tecnologia e shows que vão te surpreender."},
 }
 
 # --- INTERFACE ---
 tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠 Entenda o FluxoTur"])
 
+# --- PLANEJADOR ---
 with tab1:
+
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.fozdoiguacu.com.br/).")
-    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
-    
-    with st.form(key='busca'):
-        pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
-        btn_clicado = st.form_submit_button("🚀 Gerar roteiro inteligente")
-    
-    if btn_clicado or pesquisa:
-        with st.spinner("Analisando dados..."):
-            lista = [item for nome, item in atrativos_db.items() if not pesquisa or item['cat'].lower() == pesquisa.lower()]
-            if not lista: 
-                st.warning("🤖 Ops! Não encontrei nada.")
+
+    st.markdown("Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros turísticos.")
+
+    st.markdown("💡 Categorias: **Natureza | Esporte | Cultura | Lazer | Experiência**")
+
+    pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
+    btn = st.button("🚀 Gerar roteiro inteligente")
+
+    if btn:
+
+        resultados = []
+
+        for nome, item in atrativos_db.items():
+
+            score = round(random.uniform(5.3,10.5),1)
+
+            reputacao = round(random.uniform(3.0,4.9),1)
+
+            transito = random.choice(["Intenso","Não Intenso"])
+
+            capacidade = random.choice(["Lotado","Não Lotado"])
+
+            resultados.append({
+                "nome": nome,
+                "score": score,
+                "reputacao": reputacao,
+                "transito": transito,
+                "capacidade": capacidade,
+                "item": item
+            })
+
+        resultados = sorted(resultados, key=lambda x: x["score"], reverse=True)
+
+        for r in resultados:
+
+            st.markdown(f"### 📍 {r['nome']} ⭐ {r['score']}")
+
+            st.write(
+            f"""
+            **Reputação Digital:** {r['reputacao']}  
+            **Fluxo de Trânsito:** {r['transito']}  
+            **Capacidade de Carga:** {r['capacidade']}
+            """
+            )
+
+            if r['capacidade'] == "Lotado":
+                st.warning("⚠️ O local está lotado. Considere visitar em outro horário.")
+
+            elif r['transito'] == "Intenso":
+                st.info("🚗 Trânsito intenso na região. Recomenda-se sair mais cedo.")
+
             else:
-                for item in lista:
-                    item['score'] = round(random.uniform(5.3, 10.5), 1)
-                lista_ordenada = sorted(lista, key=lambda x: x['score'], reverse=True)
-                for item in lista_ordenada:
-                    nome = [k for k, v in atrativos_db.items() if v == item][0]
-                    st.markdown(f"### 📍 {nome} (Score: {item['score']})")
-                    st.info(f"💡 {item['dica']}")
-                    st.markdown("---")
+                st.success("✅ Condições ideais para visitação.")
 
+            st.info(f"💡 {r['item']['dica']}")
+
+            st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(r["nome"]))
+
+            st.markdown("---")
+
+# --- MAPA ---
 with tab2:
-    st.header("📍 Mapa Geral")
-    st.map(pd.DataFrame.from_dict(atrativos_db, orient='index'))
 
+    st.header("📍 Mapa Geral")
+
+    df = pd.DataFrame.from_dict(atrativos_db, orient='index')
+
+    st.map(df)
+
+# --- EXPLICAÇÃO IA ---
 with tab3:
+
     st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("O FluxoTur utiliza uma arquitetura avançada de Inteligência Artificial Não Generativa.")
+
+    st.write("""
+
+O **FluxoTur** utiliza uma arquitetura de **Inteligência Artificial Não Generativa**.
+
+Diferente de sistemas de IA generativa, que produzem textos, imagens ou conteúdos novos, o FluxoTur atua como um **sistema de análise e recomendação baseado em dados estruturados**.
+
+Na prática, a IA analisa diferentes variáveis dos atrativos turísticos, como:
+
+• reputação digital  
+• fluxo de trânsito  
+• capacidade de carga do atrativo  
+• categoria turística  
+• score de prioridade de visita
+
+A partir dessas variáveis o sistema realiza três etapas principais:
+
+**1 – Triagem de atrativos**  
+Identifica quais locais são relevantes para o visitante.
+
+**2 – Avaliação de condições de visitação**  
+Analisa trânsito, lotação e reputação digital.
+
+**3 – Otimização do roteiro turístico**  
+Organiza os atrativos em ordem de prioridade de visita.
+
+Assim, o **FluxoTur atua como um assistente inteligente de planejamento turístico**, ajudando o visitante a decidir **quando e onde visitar cada atrativo em Foz do Iguaçu** de forma mais eficiente.
+
+""")
