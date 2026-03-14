@@ -4,10 +4,9 @@ import time
 import pandas as pd
 import streamlit.components.v1 as components
 
-# Configuração de Layout
+# --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- ACESSIBILIDADE (VLIBRAS) ---
 def injetar_vlibras():
     vlibras_code = """
     <div vw class="enabled"><div vw-access-button class="active"></div><div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>
@@ -18,11 +17,10 @@ def injetar_vlibras():
 
 injetar_vlibras()
 
-# --- FUNÇÕES ---
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
 
-# --- CSS (Design da imagem) ---
+# --- CSS ---
 st.markdown("""
 <style>
 .stApp { background-image: url("https://i.ibb.co/nq73snyt/download.jpg"); background-size: cover; background-attachment: fixed; }
@@ -74,17 +72,21 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠
 with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-    st.markdown("Olá! Eu sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur...")
+    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
-    cat = st.selectbox("💬 O que você deseja fazer hoje?", ["Natureza", "Esporte", "Cultura", "Lazer", "Experiência"])
+    pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     
     if st.button("🚀 Gerar roteiro inteligente"):
-        with st.spinner("Analisando dados..."):
+        with st.spinner("Analisando..."):
             for nome, info in atrativos_db.items():
-                if info['cat'] == cat:
-                    score = round(info['R'] + random.choice([-0.2, 0.2]), 1)
-                    st.markdown(f"### 📍 {nome} (Score Final: {score})")
-                    st.write(f"**Trânsito:** {random.choice(['Intenso', 'Não Intenso'])} | **Carga:** {random.choice(['Lotado', 'Não Lotado'])}")
+                if info['cat'].lower() == pesquisa.lower():
+                    # Score final na escala 5.3 a 10.5
+                    score = round(random.uniform(5.3, 10.5), 1)
+                    c = random.choice(["Lotado", "Não Lotado"])
+                    t = random.choice(["Intenso", "Não Intenso"])
+                    
+                    st.markdown(f"### 📍 {nome}")
+                    st.write(f"**Score Final:** {score} | **Reputação:** {info['R']} | **Trânsito:** {t} | **Carga:** {c}")
                     st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(nome))
                     st.markdown("---")
 
@@ -93,6 +95,6 @@ with tab2:
     st.map(pd.DataFrame.from_dict(atrativos_db, orient='index'))
 
 with tab3:
-    st.header("🧠 Inteligência Artificial Não Generativa")
+    st.header("🧠 Entenda o FluxoTur")
     st.write("Olá, eu sou o **X.Tur**!")
     st.write("A inteligência artificial não generativa diferencia-se por focar no exame e na categorização de dados pré-existentes para a formulação de previsões. Esta distinção é fundamental para sistemas que priorizam a precisão analítica sobre a criação de conteúdo, permitindo uma governança baseada em evidências estatísticas.")
