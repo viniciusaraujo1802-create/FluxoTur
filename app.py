@@ -37,7 +37,6 @@ h1, h2, h3, p, label { color: #000000 !important; font-weight: bold; }
 """, unsafe_allow_html=True)
 
 # --- BASE DE DADOS ---
-# Certifique-se de que todos possuem lat e lon para o mapa funcionar
 atrativos_db = {
     "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "lat": -25.534, "lon": -54.545},
     "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "lat": -25.617, "lon": -54.484},
@@ -82,30 +81,35 @@ with tab1:
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
     st.markdown("Olá! Sou o FluxoTur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
     
-    pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
-    if st.button("🚀 Gerar roteiro inteligente"):
-        with st.spinner("Analisando..."):
+    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
+    
+    # Ao digitar e dar Enter, o campo 'pesquisa' é atualizado e o script roda novamente
+    pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Ou digite e aperte ENTER)")
+    
+    # O botão continua funcionando normalmente
+    if st.button("🚀 Gerar roteiro inteligente") or pesquisa:
+        # Se a pesquisa foi feita via ENTER, a lógica roda automaticamente
+        with st.spinner("Analisando dados do destino..."):
             lista_resultados = []
+            
             for nome, info in atrativos_db.items():
-                if info['cat'].lower() == pesquisa.lower():
+                if not pesquisa or info['cat'].lower() == pesquisa.lower():
                     score = round(random.uniform(5.3, 10.5), 1)
                     c = random.choice(["Lotado", "Não Lotado"])
                     t = random.choice(["Intenso", "Não Intenso"])
                     lista_resultados.append({"nome": nome, "score": score, "R": info['R'], "t": t, "c": c})
-            lista_resultados.sort(key=lambda x: x['score'], reverse=True)
-            for item in lista_resultados:
-                st.markdown(f"### 📍 {item['nome']} ({item['score']})")
-                st.write(f"**Reputação:** {item['R']} | **Trânsito:** {item['t']} | **Capacidade:** {item['c']}")
-                st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(item['nome']))
-                st.markdown("---")
-
-with tab2:
-    st.header("📍 Mapa Geral")
-    df = pd.DataFrame.from_dict(atrativos_db, orient='index')
-    # Renomeando colunas para lat/lon para o st.map aceitar
-    df = df.rename(columns={'lat': 'latitude', 'lon': 'longitude'})
-    st.map(df)
-
-with tab3:
-    st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("O FluxoTur utiliza uma arquitetura de Inteligência Artificial Não Generativa. Diferente de sistemas que criam novos conteúdos, nossa IA é especializada na análise profunda e na categorização inteligente de dados turísticos pré-existentes. Priorizamos a precisão analítica e a confiança, transformando o planejamento do passeio em uma ciência exata.")
+            
+            if not lista_resultados:
+                st.warning("🤖 Ops! Não encontrei essa categoria. Tente: Natureza, Esporte, Cultura, Lazer ou Experiência.")
+            else:
+                lista_resultados.sort(key=lambda x: x['score'], reverse=True)
+                if not pesquisa:
+                    st.success("🤖 Olá! Como você não escolheu uma categoria, preparei uma lista completa com os 33 atrativos para você explorar!")
+                else:
+                    st.success(f"🤖 Encontrei {len(lista_resultados)} ótimas opções para '{pesquisa}'. Aqui está o fluxo ideal:")
+                
+                for item in lista_resultados:
+                    st.markdown(f"### 📍 {item['nome']} ({item['score']})")
+                    st.write(f"**Reputação:** {item['R']} | **Trânsito:** {item['t']} | **Capacidade:** {item['c']}")
+                    st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(item['nome']))
+                    st.markdown("---")
