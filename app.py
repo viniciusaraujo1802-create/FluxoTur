@@ -22,12 +22,12 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }}
-    /* Estilo do Botão: Texto branco, fundo preto e borda para visibilidade */
+    /* Estilo do Botão: Fundo Branco, Texto Preto, Borda Preta */
     div.stButton > button {{
-        color: #FFFFFF !important; 
-        background-color: #000000 !important; 
+        background-color: #FFFFFF !important; 
+        color: #000000 !important;
         font-weight: bold !important;
-        border: 1px solid #FFFFFF !important;
+        border: 2px solid #000000 !important;
     }}
     </style>
     """,
@@ -127,12 +127,10 @@ with tab1:
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
                 
-                # Cálculo bruto
                 score_bruto = (reputacao * 2.0)
                 score_bruto += 1.0 if transito == "Não Intenso" else -1.0
                 score_bruto += 1.0 if capacidade == "Não Lotado" else -1.0
 
-                # Normalização para o intervalo [5.3, 10.5]
                 min_alvo, max_alvo = 5.3, 10.5
                 min_atual, max_atual = 4.0, 11.8
                 score_norm = min_alvo + ((score_bruto - min_atual) * (max_alvo - min_alvo) / (max_atual - min_atual))
