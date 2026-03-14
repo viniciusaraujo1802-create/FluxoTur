@@ -162,3 +162,7 @@ with tab3:
     st.markdown("""
     O FluxoTur foi concebido como uma ferramenta de apoio à decisão turística em tempo real, utilizando uma lógica de otimização ponderada que vai além de uma simples lista de atrativos. Diferente de sistemas convencionais, nosso algoritmo processa informações estruturadas para calcular o Índice de Otimização da Experiência, um valor que reflete o equilíbrio ideal entre qualidade, agilidade e conforto. Ao priorizar locais com reputações digitais elevadas enquanto ponderamos as condições atuais de trânsito e a capacidade de carga dos espaços, transformamos dados brutos em uma recomendação personalizada que visa maximizar o seu aproveitamento em Foz do Iguaçu.
     """)
+    st.markdown("""
+    **Sobre a Inteligência Artificial Não Generativa:**
+    Diferente dos modelos generativos que criam novos conteúdos ou textos baseados em probabilidades estatísticas, nossa IA não generativa atua com base em **lógica determinística e regras estruturadas**. Ela funciona processando dados reais e específicos em uma base de conhecimento curada, aplicando cálculos matemáticos precisos para classificar e recomendar atrativos. Em vez de "imaginar" uma resposta, o sistema avalia variáveis quantificáveis — como reputação, fluxo e capacidade — para entregar um resultado objetivo, consistente e livre de alucinações, garantindo que o roteiro sugerido seja sempre pautado na realidade atual dos pontos turísticos de Foz do Iguaçu.
+    """)
