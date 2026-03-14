@@ -1,14 +1,13 @@
 import streamlit as st
 import random
 import pandas as pd
-import streamlit.components.v1 as components
 
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS ---
+# --- VLIBRAS CORRIGIDO (Posicionado no canto inferior direito) ---
 def injetar_vlibras():
-    vlibras_code = """
+    vlibras_html = """
     <div vw class="enabled">
         <div vw-access-button class="active"></div>
         <div vw-plugin-wrapper>
@@ -19,8 +18,16 @@ def injetar_vlibras():
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
+    <style>
+        [vw] {
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            z-index: 999999 !important;
+        }
+    </style>
     """
-    components.html(vlibras_code, height=100)
+    st.markdown(vlibras_html, unsafe_allow_html=True)
 
 injetar_vlibras()
 
@@ -83,7 +90,6 @@ with tab1:
     
     st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
-    # Armazena o estado da pesquisa
     pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Digite e aperte ENTER ou clique no botão abaixo)")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
     
@@ -104,7 +110,7 @@ with tab1:
                 if not pesquisa:
                     st.success("🤖 Olá! Como você não escolheu uma categoria, listei todos os 33 atrativos incríveis que temos para você!")
                 else:
-                    st.success(f"🤖 Encontrei {len(lista_resultados)} ótimas opções para '{pesquisa}'. Aqui está o fluxo ideal:")
+                    st.success(f"🤖 Encontrei {len(lista_resultados)} opções para '{pesquisa}'. Aqui está o melhor fluxo:")
                 
                 for item in lista_resultados:
                     st.markdown(f"### 📍 {item['nome']} ({item['score']})")
@@ -120,4 +126,11 @@ with tab2:
 
 with tab3:
     st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("O FluxoTur utiliza uma arquitetura de Inteligência Artificial Não Generativa. Priorizamos a precisão analítica e a confiança, transformando o planejamento do passeio em uma ciência exata baseada em dados reais de Foz do Iguaçu.")
+    st.write("""
+    O FluxoTur utiliza uma arquitetura de **Inteligência Artificial Não Generativa**. 
+    Diferente de sistemas que criam novos conteúdos, nossa IA é especializada na análise profunda 
+    e na categorização inteligente de dados turísticos pré-existentes.
+    
+    Nosso objetivo é transformar o planejamento do seu passeio em uma ciência exata, onde cada 
+    sugestão é fruto de processamento rigoroso de informações de campo.
+    """)
