@@ -120,10 +120,16 @@ with tab1:
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
                 
-                score = (reputacao * 2.0)
-                score += 1.0 if transito == "Não Intenso" else -1.0
-                score += 1.0 if capacidade == "Não Lotado" else -1.0
-                score = round(max(0, score), 1)
+                # Cálculo bruto
+                score_bruto = (reputacao * 2.0)
+                score_bruto += 1.0 if transito == "Não Intenso" else -1.0
+                score_bruto += 1.0 if capacidade == "Não Lotado" else -1.0
+
+                # Normalização para o intervalo [5.3, 10.5]
+                min_alvo, max_alvo = 5.3, 10.5
+                min_atual, max_atual = 4.0, 11.8
+                score_norm = min_alvo + ((score_bruto - min_atual) * (max_alvo - min_alvo) / (max_atual - min_atual))
+                score = round(max(min_alvo, min(max_alvo, score_norm)), 1)
 
                 resultados.append({
                     "nome": nome, "score": score, "reputacao": reputacao,
