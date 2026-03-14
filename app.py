@@ -22,6 +22,7 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }}
+    /* Estilo do Botão: Texto branco e fundo preto */
     div.stButton > button:first-child {{
         color: #FFFFFF !important;
         background-color: #000000 !important;
@@ -111,13 +112,13 @@ with tab1:
     """)
 
     categoria_input = st.text_input(
-        "Digite o tipo de experiência (ou deixe vazio para ver todos): Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia",
+        "Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia",
         key="cat_input"
     )
 
     btn = st.button("🚀 Gerar roteiro inteligente")
 
-    if btn or st.session_state.get("cat_input") != "":
+    if btn or st.session_state.get("cat_input"):
         resultados = []
         for nome, item in atrativos_db.items():
             if not categoria_input or categoria_input.strip().lower() in item["cat"].lower():
@@ -125,10 +126,12 @@ with tab1:
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
                 
+                # Cálculo bruto
                 score_bruto = (reputacao * 2.0)
                 score_bruto += 1.0 if transito == "Não Intenso" else -1.0
                 score_bruto += 1.0 if capacidade == "Não Lotado" else -1.0
 
+                # Normalização para o intervalo [5.3, 10.5]
                 min_alvo, max_alvo = 5.3, 10.5
                 min_atual, max_atual = 4.0, 11.8
                 score_norm = min_alvo + ((score_bruto - min_atual) * (max_alvo - min_alvo) / (max_atual - min_atual))
@@ -159,6 +162,4 @@ with tab3:
     st.header("🧠 Entenda a Inteligência do FluxoTur")
     st.markdown("""
     O FluxoTur foi concebido como uma ferramenta de apoio à decisão turística em tempo real, utilizando uma lógica de otimização ponderada que vai além de uma simples lista de atrativos. Diferente de sistemas convencionais, nosso algoritmo processa informações estruturadas para calcular o Índice de Otimização da Experiência, um valor que reflete o equilíbrio ideal entre qualidade, agilidade e conforto. Ao priorizar locais com reputações digitais elevadas enquanto ponderamos as condições atuais de trânsito e a capacidade de carga dos espaços, transformamos dados brutos em uma recomendação personalizada que visa maximizar o seu aproveitamento em Foz do Iguaçu.
-
-    Dessa forma, nossa inteligência não generativa elimina a subjetividade do achismo e entrega resultados pautados na realidade operacional dos atrativos. O score exibido em cada resultado é o reflexo matemático da nossa metodologia, que penaliza gargalos operacionais como superlotação ou vias congestionadas, garantindo que você seja sempre direcionado para as opções que oferecem a melhor experiência possível no momento da sua busca. Assim, o FluxoTur atua como um facilitador técnico que organiza o seu tempo, permitindo um turismo mais humano, eficiente e tecnicamente embasado para todos os viajantes da região.
     """)
