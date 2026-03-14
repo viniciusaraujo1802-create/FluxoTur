@@ -101,7 +101,9 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠
 
 with tab1:
     st.title("🌍 FluxoTur")
-    st.markdown("Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur.")
+    st.markdown("""
+    Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur IA especializada na criação de roteiros inteligentes com os atrativos de [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).
+    """)
 
     categoria_input = st.text_input(
         "Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia",
@@ -145,5 +147,9 @@ with tab2:
     st_folium(mapa, use_container_width=True, height=600)
 
 with tab3:
-    st.header("🧠 Entenda o FluxoTur")
-    st.write("O FluxoTur utiliza uma metodologia de cálculo onde o score final é: (Reputação × 2) + bônus/penalidades por fluxo e capacidade.")
+    st.header("🧠 Entenda a Inteligência do FluxoTur")
+    st.markdown("""
+    O FluxoTur foi concebido como uma ferramenta de apoio à decisão turística em tempo real, utilizando uma lógica de otimização ponderada que vai além de uma simples lista de atrativos. Diferente de sistemas convencionais, nosso algoritmo processa informações estruturadas para calcular o Índice de Otimização da Experiência, um valor que reflete o equilíbrio ideal entre qualidade, agilidade e conforto. Ao priorizar locais com reputações digitais elevadas enquanto ponderamos as condições atuais de trânsito e a capacidade de carga dos espaços, transformamos dados brutos em uma recomendação personalizada que visa maximizar o seu aproveitamento em Foz do Iguaçu.
+
+    Dessa forma, nossa inteligência não generativa elimina a subjetividade do achismo e entrega resultados pautados na realidade operacional dos atrativos. O score exibido em cada resultado é o reflexo matemático da nossa metodologia, que penaliza gargalos operacionais como superlotação ou vias congestionadas, garantindo que você seja sempre direcionado para as opções que oferecem a melhor experiência possível no momento da sua busca. Assim, o FluxoTur atua como um facilitador técnico que organiza o seu tempo, permitindo um turismo mais humano, eficiente e tecnicamente embasado para todos os viajantes da região.
+    """)
