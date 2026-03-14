@@ -22,11 +22,12 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }}
-    /* Estilo do Botão: Texto branco e fundo preto */
-    div.stButton > button:first-child {{
-        color: #FFFFFF !important;
-        background-color: #000000 !important;
+    /* Estilo do Botão: Texto branco, fundo preto e borda para visibilidade */
+    div.stButton > button {{
+        color: #FFFFFF !important; 
+        background-color: #000000 !important; 
         font-weight: bold !important;
+        border: 1px solid #FFFFFF !important;
     }}
     </style>
     """,
