@@ -120,7 +120,7 @@ with tab1:
     [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).
     """)
 
-    categoria_input = st.text_input("Digite o tipo de experiência (Ex: Natureza, Gastronomia, ou deixe vazio para ver tudo)")
+    categoria_input = st.text_input("Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia")
 
     btn = st.button("🚀 Gerar roteiro inteligente")
 
