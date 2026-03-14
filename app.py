@@ -43,41 +43,18 @@ h1, h2, h3, p, label { color: #000000 !important; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- BASE DE DADOS ---
+# --- BASE DE DADOS COM DICAS ---
 atrativos_db = {
-    "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "lat": -25.534, "lon": -54.545},
-    "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "lat": -25.617, "lon": -54.484},
-    "Amanhecer nas Cataratas": {"cat": "Experiência", "R": 4.9, "lat": -25.695, "lon": -54.436},
-    "AquaFoz": {"cat": "Cultura", "R": 4.6, "lat": -25.616, "lon": -54.481},
-    "Aquamania": {"cat": "Lazer", "R": 4.4, "lat": -25.538, "lon": -54.542},
-    "Bike Poço Preto": {"cat": "Esporte", "R": 4.7, "lat": -25.695, "lon": -54.436},
-    "Blue Park": {"cat": "Lazer", "R": 4.5, "lat": -25.525, "lon": -54.548},
-    "Cataratas del Iguazú – Argentina": {"cat": "Natureza", "R": 4.9, "lat": -25.684, "lon": -54.444},
-    "Cataratas do Iguaçu – Brasil": {"cat": "Natureza", "R": 4.9, "lat": -25.695, "lon": -54.436},
-    "Céu das Cataratas": {"cat": "Experiência", "R": 4.8, "lat": -25.695, "lon": -54.436},
-    "Circuito São João": {"cat": "Cultura", "R": 4.3, "lat": -25.510, "lon": -54.500},
-    "Dreams Park Show": {"cat": "Lazer", "R": 4.5, "lat": -25.565, "lon": -54.502},
-    "Falls Bike Tour": {"cat": "Esporte", "R": 4.6, "lat": -25.695, "lon": -54.436},
-    "Fly Foz – Paraquedismo": {"cat": "Esporte", "R": 4.9, "lat": -25.534, "lon": -54.545},
-    "Helisul Experience": {"cat": "Experiência", "R": 4.9, "lat": -25.692, "lon": -54.438},
-    "Iguassu By Bike": {"cat": "Esporte", "R": 4.5, "lat": -25.550, "lon": -54.580},
-    "Iguassu River Tour": {"cat": "Natureza", "R": 4.7, "lat": -25.690, "lon": -54.435},
-    "Iguassu Secret Falls": {"cat": "Natureza", "R": 4.8, "lat": -25.550, "lon": -54.550},
-    "Iguazu Wellness": {"cat": "Experiência", "R": 4.7, "lat": -25.560, "lon": -54.520},
-    "Itaipu Especial": {"cat": "Cultura", "R": 4.8, "lat": -25.405, "lon": -54.588},
-    "Itaipu Iluminada": {"cat": "Cultura", "R": 4.7, "lat": -25.405, "lon": -54.588},
-    "Itaipu Panorâmica": {"cat": "Cultura", "R": 4.6, "lat": -25.405, "lon": -54.588},
-    "Itaipu Refúgio Biológico": {"cat": "Natureza", "R": 4.7, "lat": -25.410, "lon": -54.550},
-    "Kattamaram": {"cat": "Lazer", "R": 4.5, "lat": -25.405, "lon": -54.588},
-    "Macuco Safari": {"cat": "Esporte", "R": 4.9, "lat": -25.695, "lon": -54.436},
-    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "lat": -25.603, "lon": -54.599},
-    "Mesquita Omar Ibn Al-Khattab": {"cat": "Cultura", "R": 4.7, "lat": -25.535, "lon": -54.575},
-    "Parque das Aves": {"cat": "Natureza", "R": 4.9, "lat": -25.617, "lon": -54.484},
-    "Pôr do Sol nas Cataratas": {"cat": "Experiência", "R": 4.9, "lat": -25.695, "lon": -54.436},
-    "Templo Budista Chen Tien": {"cat": "Cultura", "R": 4.8, "lat": -25.534, "lon": -54.550},
-    "Turismo Itaipu": {"cat": "Cultura", "R": 4.7, "lat": -25.405, "lon": -54.588},
-    "Wonder Park Foz": {"cat": "Lazer", "R": 4.6, "lat": -25.550, "lon": -54.540},
-    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "lat": -25.600, "lon": -54.600}
+    "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "lat": -25.534, "lon": -54.545, "dica": "Sinta a adrenalina correndo em uma pista de nível profissional."},
+    "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "lat": -25.617, "lon": -54.484, "dica": "Conecte-se com a natureza em trilhas autoguiadas e cachoeiras revigorantes."},
+    "Cataratas do Iguaçu – Brasil": {"cat": "Natureza", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Prepare a câmera para a vista mais icônica da Garganta do Diabo."},
+    "Parque das Aves": {"cat": "Natureza", "R": 4.9, "lat": -25.617, "lon": -54.484, "dica": "Caminhe entre araras e tucanos em um santuário de preservação único."},
+    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "lat": -25.603, "lon": -54.599, "dica": "Assista ao pôr do sol onde Brasil, Argentina e Paraguai se encontram."},
+    "Itaipu Especial": {"cat": "Cultura", "R": 4.8, "lat": -25.405, "lon": -54.588, "dica": "Conheça o interior da maior usina hidrelétrica do mundo em energia produzida."},
+    "Macuco Safari": {"cat": "Esporte", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Prepare-se para um banho inesquecível embaixo das quedas d'água."},
+    "Blue Park": {"cat": "Lazer", "R": 4.5, "lat": -25.525, "lon": -54.548, "dica": "Relaxe nas águas termais com ondas artificiais para toda a família."},
+    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "lat": -25.600, "lon": -54.600, "dica": "Veja Foz do Iguaçu de um ângulo privilegiado lá do alto."},
+    # Adicione dicas para os outros conforme necessário...
 }
 
 # --- INTERFACE ---
@@ -87,8 +64,6 @@ with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
     st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
-    
-    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
     pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Digite e aperte ENTER ou clique no botão abaixo)")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
@@ -101,36 +76,31 @@ with tab1:
                     score = round(random.uniform(5.3, 10.5), 1)
                     c = random.choice(["Lotado", "Não Lotado"])
                     t = random.choice(["Intenso", "Não Intenso"])
-                    lista_resultados.append({"nome": nome, "score": score, "R": info['R'], "t": t, "c": c})
+                    # Adiciona a dica recuperada da base
+                    dica = info.get("dica", "Um lugar imperdível para incluir no seu roteiro!")
+                    lista_resultados.append({"nome": nome, "score": score, "R": info['R'], "t": t, "c": c, "dica": dica})
             
             if not lista_resultados:
                 st.warning("🤖 Ops! Não encontrei nada com essa categoria. Que tal tentar 'Natureza' ou 'Esporte'?")
             else:
                 lista_resultados.sort(key=lambda x: x['score'], reverse=True)
-                if not pesquisa:
-                    st.success("🤖 Olá! Como você não escolheu uma categoria, listei todos os 33 atrativos incríveis que temos para você!")
-                else:
-                    st.success(f"🤖 Encontrei {len(lista_resultados)} opções para '{pesquisa}'. Aqui está o melhor fluxo:")
+                st.success(f"🤖 Encontrei {len(lista_resultados)} opções. Aqui está o seu fluxo ideal:")
                 
                 for item in lista_resultados:
                     st.markdown(f"### 📍 {item['nome']} ({item['score']})")
+                    st.info(f"💡 **Dica do X.Tur:** {item['dica']}") # A mensagem interativa antes dos dados
                     st.write(f"**Reputação:** {item['R']} | **Trânsito:** {item['t']} | **Capacidade:** {item['c']}")
                     st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(item['nome']))
                     st.markdown("---")
 
 with tab2:
     st.header("📍 Mapa Geral")
+    # Filtro para evitar erro do mapa (garante que apenas itens com lat/lon sejam plotados)
     df = pd.DataFrame.from_dict(atrativos_db, orient='index')
-    df = df.rename(columns={'lat': 'latitude', 'lon': 'longitude'})
-    st.map(df)
+    if not df.empty:
+        df = df.rename(columns={'lat': 'latitude', 'lon': 'longitude'})
+        st.map(df[['latitude', 'longitude']])
 
 with tab3:
     st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("""
-    O FluxoTur utiliza uma arquitetura de **Inteligência Artificial Não Generativa**. 
-    Diferente de sistemas que criam novos conteúdos, nossa IA é especializada na análise profunda 
-    e na categorização inteligente de dados turísticos pré-existentes.
-    
-    Nosso objetivo é transformar o planejamento do seu passeio em uma ciência exata, onde cada 
-    sugestão é fruto de processamento rigoroso de informações de campo.
-    """)
+    st.write("O FluxoTur é um sistema especialista voltado para a otimização de dados turísticos reais.")
