@@ -43,7 +43,7 @@ h1, h2, h3, p, label { color: #000000 !important; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- BASE DE DADOS COM DICAS ---
+# --- BASE DE DADOS ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "lat": -25.534, "lon": -54.545, "dica": "Sinta a adrenalina correndo em uma pista de nível profissional."},
     "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "lat": -25.617, "lon": -54.484, "dica": "Conecte-se com a natureza em trilhas autoguiadas e cachoeiras revigorantes."},
@@ -53,8 +53,7 @@ atrativos_db = {
     "Itaipu Especial": {"cat": "Cultura", "R": 4.8, "lat": -25.405, "lon": -54.588, "dica": "Conheça o interior da maior usina hidrelétrica do mundo em energia produzida."},
     "Macuco Safari": {"cat": "Esporte", "R": 4.9, "lat": -25.695, "lon": -54.436, "dica": "Prepare-se para um banho inesquecível embaixo das quedas d'água."},
     "Blue Park": {"cat": "Lazer", "R": 4.5, "lat": -25.525, "lon": -54.548, "dica": "Relaxe nas águas termais com ondas artificiais para toda a família."},
-    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "lat": -25.600, "lon": -54.600, "dica": "Veja Foz do Iguaçu de um ângulo privilegiado lá do alto."},
-    # Adicione dicas para os outros conforme necessário...
+    "Yup Star – Roda Gigante": {"cat": "Lazer", "R": 4.4, "lat": -25.600, "lon": -54.600, "dica": "Veja Foz do Iguaçu de um ângulo privilegiado lá do alto."}
 }
 
 # --- INTERFACE ---
@@ -65,7 +64,10 @@ with tab1:
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
     st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
     
-    pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Digite e aperte ENTER ou clique no botão abaixo)")
+    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
+    
+    # Campo de busca sem texto longo
+    pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
     
     if btn_clicado or pesquisa:
@@ -76,26 +78,24 @@ with tab1:
                     score = round(random.uniform(5.3, 10.5), 1)
                     c = random.choice(["Lotado", "Não Lotado"])
                     t = random.choice(["Intenso", "Não Intenso"])
-                    # Adiciona a dica recuperada da base
-                    dica = info.get("dica", "Um lugar imperdível para incluir no seu roteiro!")
+                    dica = info.get("dica", "Um lugar imperdível!")
                     lista_resultados.append({"nome": nome, "score": score, "R": info['R'], "t": t, "c": c, "dica": dica})
             
             if not lista_resultados:
-                st.warning("🤖 Ops! Não encontrei nada com essa categoria. Que tal tentar 'Natureza' ou 'Esporte'?")
+                st.warning("🤖 Ops! Não encontrei nada com essa categoria.")
             else:
                 lista_resultados.sort(key=lambda x: x['score'], reverse=True)
-                st.success(f"🤖 Encontrei {len(lista_resultados)} opções. Aqui está o seu fluxo ideal:")
+                st.success(f"🤖 Encontrei {len(lista_resultados)} opções para você:")
                 
                 for item in lista_resultados:
                     st.markdown(f"### 📍 {item['nome']} ({item['score']})")
-                    st.info(f"💡 **Dica do X.Tur:** {item['dica']}") # A mensagem interativa antes dos dados
+                    st.info(f"💡 **Dica do X.Tur:** {item['dica']}")
                     st.write(f"**Reputação:** {item['R']} | **Trânsito:** {item['t']} | **Capacidade:** {item['c']}")
                     st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(item['nome']))
                     st.markdown("---")
 
 with tab2:
     st.header("📍 Mapa Geral")
-    # Filtro para evitar erro do mapa (garante que apenas itens com lat/lon sejam plotados)
     df = pd.DataFrame.from_dict(atrativos_db, orient='index')
     if not df.empty:
         df = df.rename(columns={'lat': 'latitude', 'lon': 'longitude'})
@@ -103,4 +103,4 @@ with tab2:
 
 with tab3:
     st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("O FluxoTur é um sistema especialista voltado para a otimização de dados turísticos reais.")
+    st.write("O FluxoTur é um sistema especialista focado na análise de dados turísticos reais de Foz do Iguaçu.")
