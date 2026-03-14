@@ -1,21 +1,27 @@
 import streamlit as st
 import random
 import pandas as pd
-import streamlit_vlibras # Adicionado para garantir o carregamento do widget
 
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS (INTEGRAÇÃO COM A BIBLIOTECA OFICIAL) ---
+# --- VLIBRAS (MÉTODO ASSÍNCRONO - SEM BIBLIOTECAS) ---
 def injetar_vlibras():
-    # Esta função da biblioteca lida com o isolamento do componente e o z-index automaticamente
-    streamlit_vlibras.components.Vibras()
-
-# --- CHAMA O VLIBRAS LOGO APÓS A CONFIGURAÇÃO ---
-injetar_vlibras()
-
-def gerar_link_mapas(nome):
-    return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
+    vlibras_html = """
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    """
+    # Usamos o st.components.v1 para carregar de forma isolada
+    import streamlit.components.v1 as components
+    components.html(vlibras_html, height=100)
 
 # --- CSS ---
 st.markdown("""
@@ -53,7 +59,7 @@ atrativos_db = {
     "Itaipu Refúgio Biológico": {"cat": "Natureza", "R": 4.7, "latitude": -25.410, "longitude": -54.550, "dica": "Encontre animais lindos e aprenda sobre a preservação local."},
     "Kattamaram": {"cat": "Lazer", "R": 4.5, "latitude": -25.405, "longitude": -54.588, "dica": "Relaxe no convés e deixe o barco te levar pelo lago de Itaipu."},
     "Macuco Safari": {"cat": "Esporte", "R": 4.9, "latitude": -25.695, "longitude": -54.436, "dica": "Se prepare para se molhar e gritar de tanta emoção!"},
-    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "latitude": -25.603, "longitude": -54.599, "dica": "Onde o Brasil dá a mão para a Argentina e o Paraguai. Imperdível!"},
+    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "latitude": -25.603, "longitude": -54.599, "dica": "O onde o Brasil dá a mão para a Argentina e o Paraguai. Imperdível!"},
     "Mesquita Omar Ibn Al-Khattab": {"cat": "Cultura", "R": 4.7, "latitude": -25.535, "longitude": -54.575, "dica": "Uma joia arquitetônica que traz o oriente para o coração de Foz."},
     "Parque das Aves": {"cat": "Natureza", "R": 4.9, "latitude": -25.617, "longitude": -54.484, "dica": "Entre no viveiro e sinta a vida das aves tropicais ao redor."},
     "Pôr do Sol nas Cataratas": {"cat": "Experiência", "R": 4.9, "latitude": -25.695, "longitude": -54.436, "dica": "O encerramento perfeito para um dia mágico nas águas."},
@@ -69,7 +75,9 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠
 with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur.")
+    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
+    
+    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
     pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
@@ -97,6 +105,9 @@ with tab3:
     st.header("🧠 Inteligência Artificial Não Generativa")
     st.write("""
     O FluxoTur utiliza uma arquitetura avançada de **Inteligência Artificial Não Generativa**. 
-    Diferente de modelos de linguagem tradicionais, o X.Tur opera como um 
-    sistema especialista focado em análise, triagem e recomendação baseada em dados reais.
+    Diferente de modelos de linguagem tradicionais que geram conteúdo criativo, o X.Tur opera como um 
+    sistema especialista focado em análise, triagem e recomendação baseada em dados reais e verificáveis.
+    
+    O objetivo é transformar a complexidade logística do turismo em uma experiência fluida, eficiente e 
+    personalizada para cada visitante que deseja explorar Foz do Iguaçu.
     """)
