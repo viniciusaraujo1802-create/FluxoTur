@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import pandas as pd
+import streamlit.components.v1 as components
 
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
@@ -22,7 +23,6 @@ def injetar_vlibras():
         [vw] { position: fixed !important; bottom: 30px !important; right: 30px !important; z-index: 99999999 !important; }
     </style>
     """
-    import streamlit.components.v1 as components
     components.html(vlibras_html, height=100)
 
 injetar_vlibras()
@@ -83,7 +83,6 @@ with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
     st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur.")
-    
     st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
     pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
@@ -96,16 +95,14 @@ with tab1:
             if not lista: 
                 st.warning("🤖 Ops! Não encontrei nada.")
             else:
-                # Gera o Score Final (5.3 a 10.5) e soma com a reputação para ordenar
+                # Calcula score aleatório (5.3 a 10.5) para cada item
                 for item in lista:
                     item['score_final_calculado'] = round(random.uniform(5.3, 10.5), 1)
-                    # O critério de ordenação é o score final + peso da reputação (R)
-                    item['ordem'] = item['score_final_calculado'] + item['R']
                 
-                # Ordena pelo maior valor de 'ordem'
-                lista_ordenada = sorted(lista, key=lambda x: x['ordem'], reverse=True)
+                # ORDENAÇÃO RÍGIDA: do maior para o menor score final
+                lista_ordenada = sorted(lista, key=lambda x: x['score_final_calculado'], reverse=True)
                 
-                st.success(f"🤖 Encontrei {len(lista_ordenada)} opções para você:")
+                st.success(f"🤖 Encontrei {len(lista_ordenada)} opções para você (Ordenado por Score):")
                 for item in lista_ordenada:
                     nome_atrativo = [k for k, v in atrativos_db.items() if v == item][0]
                     st.markdown(f"### 📍 {nome_atrativo} (Score: {item['score_final_calculado']})")
