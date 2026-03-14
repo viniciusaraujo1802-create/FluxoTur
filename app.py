@@ -81,7 +81,10 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠
 with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-    st.markdown("Olá! Sou o X.Tur, a IA não generativa da FluxoTur.")
+    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
+    
+    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
+    
     pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
     
@@ -90,12 +93,13 @@ with tab1:
             lista = [item for nome, item in atrativos_db.items() if not pesquisa or item['cat'].lower() == pesquisa.lower()]
             if not lista: st.warning("🤖 Ops! Não encontrei nada.")
             else:
-                st.success(f"🤖 Encontrei {len(lista)} opções:")
+                st.success(f"🤖 Encontrei {len(lista)} opções para você:")
                 for item in lista:
-                    st.markdown(f"### 📍 {list(atrativos_db.keys())[list(atrativos_db.values()).index(item)]}")
+                    nome_atrativo = [k for k, v in atrativos_db.items() if v == item][0]
+                    st.markdown(f"### 📍 {nome_atrativo}")
                     st.info(f"💡 Dica: {item['dica']}")
                     st.write(f"**Reputação:** {item['R']} | **Trânsito:** {random.choice(['Intenso', 'Não Intenso'])} | **Capacidade:** {random.choice(['Lotado', 'Não Lotado'])}")
-                    st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(list(atrativos_db.keys())[list(atrativos_db.values()).index(item)]))
+                    st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(nome_atrativo))
                     st.markdown("---")
 
 with tab2:
@@ -104,4 +108,14 @@ with tab2:
 
 with tab3:
     st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("O FluxoTur é um sistema especialista em dados turísticos.")
+    st.write("""
+    O FluxoTur utiliza uma arquitetura avançada de **Inteligência Artificial Não Generativa**. 
+    Diferente de modelos de linguagem tradicionais que geram conteúdo criativo, o X.Tur opera como um 
+    sistema especialista focado em análise, triagem e recomendação baseada em dados reais e verificáveis.
+    
+    Nossa metodologia consiste em:
+    * **Curadoria de Dados**: Processamento rigoroso de informações turísticas oficiais.
+    * **Otimização Logística**: Cálculo de fluxo e capacidade para melhorar a experiência do visitante.
+    * **Ciência Exata**: Nossas recomendações são resultados de processamento algorítmico, garantindo 
+      que cada sugestão de roteiro esteja alinhada com as melhores práticas de turismo inteligente e sustentável.
+    """)
