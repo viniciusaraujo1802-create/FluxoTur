@@ -1,11 +1,12 @@
 import streamlit as st
 import random
 import pandas as pd
+import streamlit.components.v1 as components
 
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS (INCLUSO E AJUSTADO PARA VISIBILIDADE) ---
+# --- VLIBRAS (INTEGRAÇÃO CORRETA) ---
 def injetar_vlibras():
     vlibras_html = """
     <div vw class="enabled">
@@ -18,17 +19,10 @@ def injetar_vlibras():
     <script>
         new window.VLibras.Widget('https://vlibras.gov.br/app');
     </script>
-    <style>
-        /* Ajuste para garantir que o boneco fique visível e fixo no canto inferior direito */
-        [vw] { 
-            position: fixed !important; 
-            bottom: 30px !important; 
-            right: 30px !important; 
-            z-index: 99999999 !important; 
-        }
-    </style>
     """
-    st.markdown(vlibras_html, unsafe_allow_html=True)
+    # Usamos height=0 para que o componente fique invisível na estrutura, 
+    # mas o script seja executado globalmente na página
+    components.html(vlibras_html, height=0)
 
 injetar_vlibras()
 
@@ -44,7 +38,7 @@ h1, h2, h3, p, label { color: #000000 !important; font-weight: bold; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- BASE DE DADOS COMPLETA (33) ---
+# --- BASE DE DADOS COMPLETA ---
 atrativos_db = {
     "Kartódromo - Adrena Kart": {"cat": "Esporte", "R": 4.5, "latitude": -25.534, "longitude": -54.545, "dica": "Prepare o capacete e acelere fundo nesta pista de elite!"},
     "Aguaray Eco": {"cat": "Natureza", "R": 4.8, "latitude": -25.617, "longitude": -54.484, "dica": "O refúgio perfeito para renovar as energias em trilhas selvagens."},
@@ -71,7 +65,7 @@ atrativos_db = {
     "Itaipu Refúgio Biológico": {"cat": "Natureza", "R": 4.7, "latitude": -25.410, "longitude": -54.550, "dica": "Encontre animais lindos e aprenda sobre a preservação local."},
     "Kattamaram": {"cat": "Lazer", "R": 4.5, "latitude": -25.405, "longitude": -54.588, "dica": "Relaxe no convés e deixe o barco te levar pelo lago de Itaipu."},
     "Macuco Safari": {"cat": "Esporte", "R": 4.9, "latitude": -25.695, "longitude": -54.436, "dica": "Se prepare para se molhar e gritar de tanta emoção!"},
-    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "latitude": -25.603, "longitude": -54.599, "dica": "O onde o Brasil dá a mão para a Argentina e o Paraguai. Imperdível!"},
+    "Marco das Três Fronteiras": {"cat": "Cultura", "R": 4.8, "latitude": -25.603, "longitude": -54.599, "dica": "Onde o Brasil dá a mão para a Argentina e o Paraguai. Imperdível!"},
     "Mesquita Omar Ibn Al-Khattab": {"cat": "Cultura", "R": 4.7, "latitude": -25.535, "longitude": -54.575, "dica": "Uma joia arquitetônica que traz o oriente para o coração de Foz."},
     "Parque das Aves": {"cat": "Natureza", "R": 4.9, "latitude": -25.617, "longitude": -54.484, "dica": "Entre no viveiro e sinta a vida das aves tropicais ao redor."},
     "Pôr do Sol nas Cataratas": {"cat": "Experiência", "R": 4.9, "latitude": -25.695, "longitude": -54.436, "dica": "O encerramento perfeito para um dia mágico nas águas."},
@@ -87,9 +81,7 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠
 with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
-    
-    st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
+    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur.")
     
     pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     btn_clicado = st.button("🚀 Gerar roteiro inteligente")
@@ -99,13 +91,10 @@ with tab1:
             lista = [item for nome, item in atrativos_db.items() if not pesquisa or item['cat'].lower() == pesquisa.lower()]
             if not lista: st.warning("🤖 Ops! Não encontrei nada.")
             else:
-                st.success(f"🤖 Encontrei {len(lista)} opções para você:")
                 for item in lista:
                     nome_atrativo = [k for k, v in atrativos_db.items() if v == item][0]
-                    score_final = round(random.uniform(5.3, 10.5), 1)
-                    st.markdown(f"### 📍 {nome_atrativo} ({score_final})")
+                    st.markdown(f"### 📍 {nome_atrativo}")
                     st.info(f"💡 {item['dica']}")
-                    st.write(f"**Reputação:** {item['R']} | **Trânsito:** {random.choice(['Intenso', 'Não Intenso'])} | **Capacidade:** {random.choice(['Lotado', 'Não Lotado'])}")
                     st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(nome_atrativo))
                     st.markdown("---")
 
@@ -115,11 +104,4 @@ with tab2:
 
 with tab3:
     st.header("🧠 Inteligência Artificial Não Generativa")
-    st.write("""
-    O FluxoTur utiliza uma arquitetura avançada de **Inteligência Artificial Não Generativa**. 
-    Diferente de modelos de linguagem tradicionais que geram conteúdo criativo, o X.Tur opera como um 
-    sistema especialista focado em análise, triagem e recomendação baseada em dados reais e verificáveis.
-    
-    O objetivo é transformar a complexidade logística do turismo em uma experiência fluida, eficiente e 
-    personalizada para cada visitante que deseja explorar Foz do Iguaçu.
-    """)
+    st.write("O FluxoTur utiliza uma arquitetura focada em sistemas especialistas.")
