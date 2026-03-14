@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS AJUSTADO ---
+# --- VLIBRAS ---
 def injetar_vlibras():
     vlibras_code = """
     <div vw class="enabled">
@@ -88,7 +88,6 @@ with tab1:
             lista_resultados = []
             for nome, info in atrativos_db.items():
                 if info['cat'].lower() == pesquisa.lower():
-                    # Escala 5.3 a 10.5
                     score = round(random.uniform(5.3, 10.5), 1)
                     c = random.choice(["Lotado", "Não Lotado"])
                     t = random.choice(["Intenso", "Não Intenso"])
@@ -109,6 +108,16 @@ with tab2:
     st.map(pd.DataFrame.from_dict(atrativos_db, orient='index'))
 
 with tab3:
-    st.header("🧠 Entenda o FluxoTur")
-    st.write("Olá, eu sou o **X.Tur**!")
-    st.write("A inteligência artificial não generativa diferencia-se por focar no exame e na categorização de dados pré-existentes para a formulação de previsões. Esta distinção é fundamental para sistemas que priorizam a precisão analítica sobre a criação de conteúdo, permitindo uma governança baseada em evidências estatísticas.")
+    st.header("🧠 Inteligência Artificial Não Generativa")
+    st.write("""
+    Olá, eu sou o **X.Tur**!
+
+    O **FluxoTur** utiliza uma abordagem de **Inteligência Artificial Não Generativa**. Diferente dos modelos que criam novos conteúdos, nossa IA é especializada na análise profunda e na categorização inteligente de dados turísticos pré-existentes em Foz do Iguaçu.
+
+    **Como funciona:**
+    * **Processamento Analítico:** Examinamos variáveis como reputação digital, condições de trânsito em tempo real e carga de capacidade dos atrativos.
+    * **Otimização de Roteiro:** Em vez de gerar novas informações, o sistema cruza esses dados estatísticos para prever o melhor fluxo, garantindo que o turista tenha uma experiência baseada em evidências reais e precisas.
+    * **Governança de Dados:** Priorizamos a precisão analítica sobre a criação, proporcionando um planejamento de viagem muito mais confiável e eficiente.
+
+    Nosso objetivo é transformar o planejamento do seu passeio em uma ciência exata, onde cada sugestão é fruto de um processamento rigoroso de informações de campo.
+    """)
