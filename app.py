@@ -22,6 +22,11 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }}
+    div.stButton > button:first-child {{
+        color: #FFFFFF !important;
+        background-color: #000000 !important;
+        font-weight: bold !important;
+    }}
     </style>
     """,
     unsafe_allow_html=True
@@ -106,13 +111,13 @@ with tab1:
     """)
 
     categoria_input = st.text_input(
-        "Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia",
+        "Digite o tipo de experiência (ou deixe vazio para ver todos): Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia",
         key="cat_input"
     )
 
     btn = st.button("🚀 Gerar roteiro inteligente")
 
-    if btn or st.session_state.get("cat_input"):
+    if btn or st.session_state.get("cat_input") != "":
         resultados = []
         for nome, item in atrativos_db.items():
             if not categoria_input or categoria_input.strip().lower() in item["cat"].lower():
@@ -120,12 +125,10 @@ with tab1:
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
                 
-                # Cálculo bruto
                 score_bruto = (reputacao * 2.0)
                 score_bruto += 1.0 if transito == "Não Intenso" else -1.0
                 score_bruto += 1.0 if capacidade == "Não Lotado" else -1.0
 
-                # Normalização para o intervalo [5.3, 10.5]
                 min_alvo, max_alvo = 5.3, 10.5
                 min_atual, max_atual = 4.0, 11.8
                 score_norm = min_alvo + ((score_bruto - min_atual) * (max_alvo - min_alvo) / (max_atual - min_atual))
