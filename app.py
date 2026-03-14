@@ -30,6 +30,7 @@ def injetar_vlibras():
 
 injetar_vlibras()
 
+
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
 
@@ -50,7 +51,7 @@ def calcular_distancia(lat1, lon1, lat2, lon2):
     return R*c
 
 
-# ---------------- BASE EXPANDIDA ----------------
+# ---------------- BASE DE ATRATIVOS ----------------
 
 atrativos_db = {
 
@@ -90,25 +91,20 @@ atrativos_db = {
 "Turismo Itaipu":{"cat":"Cultura","latitude":-25.405,"longitude":-54.588,"dica":"Centro de visitantes com diversas experiências."},
 "Yup Star – Roda Gigante":{"cat":"Lazer","latitude":-25.600,"longitude":-54.600,"dica":"Roda gigante com vista panorâmica de Foz."},
 
-# -------- RESTAURANTES --------
+# -------- RESTAURANTES (GASTRONOMIA) --------
 
-"Rafain Churrascaria":{"cat":"Restaurante","latitude":-25.547,"longitude":-54.585,"dica":"Churrascaria tradicional com show latino-americano."},
-"La Mafia Trattoria":{"cat":"Restaurante","latitude":-25.545,"longitude":-54.587,"dica":"Restaurante italiano famoso na cidade."},
-"Vó Bertila Pizza":{"cat":"Restaurante","latitude":-25.550,"longitude":-54.585,"dica":"Pizzaria artesanal muito conhecida em Foz."},
-"Capitão Bar":{"cat":"Restaurante","latitude":-25.548,"longitude":-54.586,"dica":"Bar e restaurante com clima descontraído."},
-"Empório com Arte":{"cat":"Restaurante","latitude":-25.552,"longitude":-54.584,"dica":"Restaurante com gastronomia contemporânea."},
-"Porto Canoas":{"cat":"Restaurante","latitude":-25.695,"longitude":-54.437,"dica":"Restaurante dentro do Parque Nacional."},
-"Sushi Hokkai":{"cat":"Restaurante","latitude":-25.544,"longitude":-54.586,"dica":"Restaurante japonês popular na cidade."},
-"Mega Pizza":{"cat":"Restaurante","latitude":-25.546,"longitude":-54.585,"dica":"Pizzaria tradicional."},
-"Castelo Alemão":{"cat":"Restaurante","latitude":-25.547,"longitude":-54.586,"dica":"Restaurante temático alemão."},
+"Rafain Churrascaria":{"cat":"Gastronomia","latitude":-25.547,"longitude":-54.585,"dica":"Churrascaria tradicional com show latino-americano."},
+"La Mafia Trattoria":{"cat":"Gastronomia","latitude":-25.545,"longitude":-54.587,"dica":"Restaurante italiano famoso na cidade."},
+"Vó Bertila Pizza":{"cat":"Gastronomia","latitude":-25.550,"longitude":-54.585,"dica":"Pizzaria artesanal muito conhecida em Foz."},
+"Capitão Bar":{"cat":"Gastronomia","latitude":-25.548,"longitude":-54.586,"dica":"Bar e restaurante com clima descontraído."},
+"Empório com Arte":{"cat":"Gastronomia","latitude":-25.552,"longitude":-54.584,"dica":"Restaurante com gastronomia contemporânea."},
+"Porto Canoas":{"cat":"Gastronomia","latitude":-25.695,"longitude":-54.437,"dica":"Restaurante dentro do Parque Nacional."},
+"Sushi Hokkai":{"cat":"Gastronomia","latitude":-25.544,"longitude":-54.586,"dica":"Restaurante japonês popular na cidade."},
 
-# -------- SHOPPINGS --------
+# -------- SHOPPINGS (LAZER) --------
 
-"Shopping Catuaí Palladium":{"cat":"Shopping","latitude":-25.527,"longitude":-54.573,"dica":"Maior shopping da cidade."},
-"JL Cataratas Shopping":{"cat":"Shopping","latitude":-25.539,"longitude":-54.584,"dica":"Shopping central de Foz do Iguaçu."},
-"Shopping Paris":{"cat":"Shopping","latitude":-25.509,"longitude":-54.611,"dica":"Shopping em Ciudad del Este."},
-"Shopping Del Este":{"cat":"Shopping","latitude":-25.507,"longitude":-54.612,"dica":"Centro comercial popular no Paraguai."},
-"Shopping China Importados":{"cat":"Shopping","latitude":-25.508,"longitude":-54.610,"dica":"Shopping famoso por importados."}
+"Shopping Catuaí Palladium":{"cat":"Lazer","latitude":-25.527,"longitude":-54.573,"dica":"Maior shopping da cidade."},
+"JL Cataratas Shopping":{"cat":"Lazer","latitude":-25.539,"longitude":-54.584,"dica":"Shopping central de Foz do Iguaçu."}
 
 }
 
@@ -124,11 +120,16 @@ with tab1:
 
     st.title("🌍 FluxoTur")
 
-    st.markdown(
-    "Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros turísticos."
+    st.markdown("""
+Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros turísticos com os atrativos do  
+[Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/)
+""")
+
+    categoria = st.selectbox(
+        "Escolha o tipo de experiência",
+        ["Todas","Natureza","Cultura","Experiência","Esporte","Lazer","Gastronomia"]
     )
 
-    pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
     btn = st.button("🚀 Gerar roteiro inteligente")
 
     if btn:
@@ -137,7 +138,7 @@ with tab1:
 
         for nome,item in atrativos_db.items():
 
-            if pesquisa=="" or pesquisa.lower() in item["cat"].lower():
+            if categoria=="Todas" or item["cat"]==categoria:
 
                 score = round(random.uniform(5.3,10.5),1)
                 reputacao = round(random.uniform(3.0,4.9),1)
@@ -197,5 +198,7 @@ with tab3:
     st.header("🧠 Entenda o FluxoTur")
 
     st.write("""
-O FluxoTur é um protótipo de inteligência artificial não generativa voltado ao planejamento turístico em Foz do Iguaçu.
+O FluxoTur é um protótipo de inteligência artificial não generativa voltado ao planejamento turístico em Foz do Iguaçu. Diferentemente das inteligências artificiais generativas, que produzem conteúdos novos com base em grandes modelos estatísticos, uma inteligência não generativa trabalha com bases estruturadas de dados previamente organizadas. Isso significa que o sistema utiliza informações reais sobre atrativos turísticos, categorias de experiências, localização geográfica e características de visitação para apoiar o planejamento de roteiros turísticos.
+
+Na prática, o FluxoTur funciona como um sistema de apoio ao visitante, permitindo identificar rapidamente atrativos naturais, culturais, experiências turísticas, opções de lazer e estabelecimentos gastronômicos em Foz do Iguaçu e região trinacional. A plataforma também integra visualização em mapa, classificação de atrativos e sugestões de visitação, contribuindo para uma organização mais eficiente do tempo do turista no destino.
 """)
