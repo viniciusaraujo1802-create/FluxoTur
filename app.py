@@ -5,7 +5,7 @@ import pandas as pd
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS CORRIGIDO (Posicionado no canto inferior direito) ---
+# --- VLIBRAS CORRIGIDO ---
 def injetar_vlibras():
     vlibras_html = """
     <div vw class="enabled">
@@ -86,7 +86,7 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠
 with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
-    st.markdown("Olá! Sou o FluxoTur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
+    st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros com os atrativos encontrados no site [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/).")
     
     st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
