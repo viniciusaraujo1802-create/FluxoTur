@@ -77,16 +77,25 @@ with tab1:
     
     if st.button("🚀 Gerar roteiro inteligente"):
         with st.spinner("Analisando..."):
+            lista_resultados = []
             for nome, info in atrativos_db.items():
                 if info['cat'].lower() == pesquisa.lower():
+                    # Cálculo dos indicadores
                     score = round(random.uniform(5.3, 10.5), 1)
                     c = random.choice(["Lotado", "Não Lotado"])
                     t = random.choice(["Intenso", "Não Intenso"])
-                    
-                    st.markdown(f"### 📍 {nome} ({score})")
-                    st.write(f"**Reputação:** {info['R']} | **Trânsito:** {t} | **Capacidade:** {c}")
-                    st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(nome))
-                    st.markdown("---")
+                    lista_resultados.append({
+                        "nome": nome, "score": score, "R": info['R'], "t": t, "c": c
+                    })
+            
+            # Ordenar do maior score para o menor
+            lista_resultados.sort(key=lambda x: x['score'], reverse=True)
+            
+            for item in lista_resultados:
+                st.markdown(f"### 📍 {item['nome']} ({item['score']})")
+                st.write(f"**Reputação:** {item['R']} | **Trânsito:** {item['t']} | **Capacidade:** {item['c']}")
+                st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(item['nome']))
+                st.markdown("---")
 
 with tab2:
     st.header("📍 Mapa Geral dos 33 Atrativos")
