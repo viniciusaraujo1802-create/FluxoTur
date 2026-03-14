@@ -7,31 +7,6 @@ from math import radians, sin, cos, sqrt, atan2
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# ---------------- ESTILO DO FUNDO ----------------
-
-page_bg_img = """
-<style>
-[data-testid="stAppViewContainer"] {
-    background-image: url("https://i.ibb.co/cSzgTZ7x/download-1.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-[data-testid="stAppViewContainer"]::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    pointer-events: none;
-}
-</style>
-"""
-st.markdown(page_bg_img, unsafe_allow_html=True)
-
 # ---------------- VLIBRAS ----------------
 
 def injetar_vlibras():
@@ -42,9 +17,7 @@ def injetar_vlibras():
         <div class="vw-plugin-top-wrapper"></div>
       </div>
     </div>
-
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-
     <script>
       window.onload = function() {
         new window.VLibras.Widget('https://vlibras.gov.br/app');
@@ -57,20 +30,6 @@ injetar_vlibras()
 
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
-
-# ---------------- DISTÂNCIA ----------------
-
-def calcular_distancia(lat1, lon1, lat2, lon2):
-    R = 6371
-    lat1,lon1,lat2,lon2 = map(radians,[lat1,lon1,lat2,lon2])
-
-    dlat = lat2-lat1
-    dlon = lon2-lon1
-
-    a = sin(dlat/2)**2 + cos(lat1)*cos(lat2)*sin(dlon/2)**2
-    c = 2*atan2(sqrt(a),sqrt(1-a))
-
-    return R*c
 
 # ---------------- BASE DE ATRATIVOS ----------------
 
@@ -128,11 +87,9 @@ tab1,tab2,tab3 = st.tabs(["🚀 Planejador FluxoTur","📍 Mapa Geral","🧠 Ent
 with tab1:
     st.title("🌍 FluxoTur")
     st.markdown("""
-Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros turísticos com os atrativos do  
-[Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/)
+Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros turísticos.
 """)
 
-    # Filtros na Barra Lateral
     with st.sidebar:
         st.header("⚙️ Filtros")
         categoria = st.radio(
@@ -149,26 +106,14 @@ Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur es
                 reputacao = round(random.uniform(3.0,4.9),1)
                 transito = random.choice(["Intenso","Não Intenso"])
                 capacidade = random.choice(["Lotado","Não Lotado"])
-
-                resultados.append({
-                    "nome":nome,
-                    "score":score,
-                    "reputacao":reputacao,
-                    "transito":transito,
-                    "capacidade":capacidade,
-                    "item":item
-                })
+                resultados.append({"nome":nome,"score":score,"reputacao":reputacao,"transito":transito,"capacidade":capacidade,"item":item})
 
         resultados=sorted(resultados,key=lambda x:x["score"],reverse=True)
         st.success(f"Aqui estão os {len(resultados)} locais encontrados")
 
         for r in resultados:
             st.markdown(f"### 📍 {r['nome']} ⭐ {r['score']}")
-            st.write(f"""
-            **Reputação Digital:** {r['reputacao']}  
-            **Fluxo de Trânsito:** {r['transito']}  
-            **Capacidade de Carga:** {r['capacidade']}
-            """)
+            st.write(f"**Reputação:** {r['reputacao']} | **Trânsito:** {r['transito']} | **Carga:** {r['capacidade']}")
             st.info(f"💡 {r['item']['dica']}")
             st.link_button("📍 Abrir no Google Maps",gerar_link_mapas(r["nome"]))
             st.markdown("---")
@@ -178,16 +123,11 @@ Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur es
 with tab2:
     mapa=folium.Map(location=[-25.55,-54.58],zoom_start=11)
     for nome,item in atrativos_db.items():
-        folium.Marker(
-            [item["latitude"],item["longitude"]],
-            popup=nome
-        ).add_to(mapa)
+        folium.Marker([item["latitude"],item["longitude"]], popup=nome).add_to(mapa)
     st_folium(mapa,width=900,height=600)
 
 # ---------------- EXPLICAÇÃO ----------------
 
 with tab3:
     st.header("🧠 Entenda o FluxoTur")
-    st.write("""
-O FluxoTur é um protótipo de inteligência artificial não generativa voltado ao planejamento turístico em Foz do Iguaçu.
-""")
+    st.write("O FluxoTur é um protótipo de inteligência artificial não generativa.")
