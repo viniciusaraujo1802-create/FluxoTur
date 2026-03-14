@@ -84,15 +84,6 @@ with tab1:
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
     st.markdown("Olá! Sou o X.Tur, a inteligência artificial não generativa da FluxoTur.")
     
-    st.markdown("""
-    O FluxoTur utiliza uma arquitetura avançada de **Inteligência Artificial Não Generativa**. 
-    Diferente de modelos de linguagem tradicionais que geram conteúdo criativo, o X.Tur opera como um 
-    sistema especialista focado em análise, triagem e recomendação baseada em dados reais e verificáveis.
-    
-    O objetivo é transformar a complexidade logística do turismo em uma experiência fluida, eficiente e 
-    personalizada para cada visitante que deseja explorar Foz do Iguaçu.
-    """)
-    
     st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
     pesquisa = st.text_input("💬 O que você deseja fazer hoje?")
@@ -105,17 +96,19 @@ with tab1:
             if not lista: 
                 st.warning("🤖 Ops! Não encontrei nada.")
             else:
-                # Adiciona score temporário aleatório para permitir desempate dinâmico
+                # Gera o Score Final (5.3 a 10.5) e soma com a reputação para ordenar
                 for item in lista:
-                    item['temp_score'] = item['R'] + random.uniform(0, 0.5)
+                    item['score_final_calculado'] = round(random.uniform(5.3, 10.5), 1)
+                    # O critério de ordenação é o score final + peso da reputação (R)
+                    item['ordem'] = item['score_final_calculado'] + item['R']
                 
-                # Ordena: maior nota primeiro (com aleatoriedade no empate)
-                lista_ordenada = sorted(lista, key=lambda x: x['temp_score'], reverse=True)
+                # Ordena pelo maior valor de 'ordem'
+                lista_ordenada = sorted(lista, key=lambda x: x['ordem'], reverse=True)
                 
                 st.success(f"🤖 Encontrei {len(lista_ordenada)} opções para você:")
                 for item in lista_ordenada:
                     nome_atrativo = [k for k, v in atrativos_db.items() if v == item][0]
-                    st.markdown(f"### 📍 {nome_atrativo} (Nota: {item['R']})")
+                    st.markdown(f"### 📍 {nome_atrativo} (Score: {item['score_final_calculado']})")
                     st.info(f"💡 {item['dica']}")
                     st.write(f"**Reputação:** {item['R']} | **Trânsito:** {random.choice(['Intenso', 'Não Intenso'])} | **Capacidade:** {random.choice(['Lotado', 'Não Lotado'])}")
                     st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(nome_atrativo))
