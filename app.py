@@ -7,6 +7,31 @@ from math import radians, sin, cos, sqrt, atan2
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
+# ---------------- ESTILO DO FUNDO ----------------
+
+page_bg_img = """
+<style>
+[data-testid="stAppViewContainer"] {
+    background-image: url("https://i.ibb.co/cSzgTZ7x/download-1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+[data-testid="stAppViewContainer"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+}
+</style>
+"""
+st.markdown(page_bg_img, unsafe_allow_html=True)
+
 # ---------------- VLIBRAS ----------------
 
 def injetar_vlibras():
@@ -107,15 +132,14 @@ Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur es
 [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/)
 """)
 
-    # Filtro em formato horizontal
-    categoria = st.radio(
-        "Selecione o filtro:",
-        ["Todas", "Natureza", "Cultura", "Experiência", "Esporte", "Lazer", "Gastronomia"],
-        horizontal=True,
-        label_visibility="collapsed"
-    )
-
-    btn = st.button("🚀 Gerar roteiro inteligente")
+    # Filtros na Barra Lateral
+    with st.sidebar:
+        st.header("⚙️ Filtros")
+        categoria = st.radio(
+            "Escolha o tipo de experiência",
+            ["Todas","Natureza","Cultura","Experiência","Esporte","Lazer","Gastronomia"]
+        )
+        btn = st.button("🚀 Gerar roteiro inteligente")
 
     if btn:
         resultados=[]
@@ -165,5 +189,5 @@ with tab2:
 with tab3:
     st.header("🧠 Entenda o FluxoTur")
     st.write("""
-O FluxoTur é um protótipo de inteligência artificial não generativa voltado ao planejamento turístico em Foz do Iguaçu. Diferentemente das inteligências artificiais generativas, que produzem conteúdos novos com base em grandes modelos estatísticos, uma inteligência não generativa trabalha com bases estruturadas de dados previamente organizadas. Isso significa que o sistema utiliza informações reais sobre atrativos turísticos, categorias de experiências, localização geográfica e características de visitação para apoiar o planejamento de roteiros turísticos.
+O FluxoTur é um protótipo de inteligência artificial não generativa voltado ao planejamento turístico em Foz do Iguaçu.
 """)
