@@ -83,15 +83,13 @@ with tab1:
     
     st.markdown("💡 Categorias: **Natureza** | **Esporte** | **Cultura** | **Lazer** | **Experiência**")
     
-    # Ao digitar e dar Enter, o campo 'pesquisa' é atualizado e o script roda novamente
-    pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Ou digite e aperte ENTER)")
+    # Armazena o estado da pesquisa
+    pesquisa = st.text_input("💬 O que você deseja fazer hoje? (Digite e aperte ENTER ou clique no botão abaixo)")
+    btn_clicado = st.button("🚀 Gerar roteiro inteligente")
     
-    # O botão continua funcionando normalmente
-    if st.button("🚀 Gerar roteiro inteligente") or pesquisa:
-        # Se a pesquisa foi feita via ENTER, a lógica roda automaticamente
+    if btn_clicado or pesquisa:
         with st.spinner("Analisando dados do destino..."):
             lista_resultados = []
-            
             for nome, info in atrativos_db.items():
                 if not pesquisa or info['cat'].lower() == pesquisa.lower():
                     score = round(random.uniform(5.3, 10.5), 1)
@@ -100,11 +98,11 @@ with tab1:
                     lista_resultados.append({"nome": nome, "score": score, "R": info['R'], "t": t, "c": c})
             
             if not lista_resultados:
-                st.warning("🤖 Ops! Não encontrei essa categoria. Tente: Natureza, Esporte, Cultura, Lazer ou Experiência.")
+                st.warning("🤖 Ops! Não encontrei nada com essa categoria. Que tal tentar 'Natureza' ou 'Esporte'?")
             else:
                 lista_resultados.sort(key=lambda x: x['score'], reverse=True)
                 if not pesquisa:
-                    st.success("🤖 Olá! Como você não escolheu uma categoria, preparei uma lista completa com os 33 atrativos para você explorar!")
+                    st.success("🤖 Olá! Como você não escolheu uma categoria, listei todos os 33 atrativos incríveis que temos para você!")
                 else:
                     st.success(f"🤖 Encontrei {len(lista_resultados)} ótimas opções para '{pesquisa}'. Aqui está o fluxo ideal:")
                 
@@ -113,3 +111,13 @@ with tab1:
                     st.write(f"**Reputação:** {item['R']} | **Trânsito:** {item['t']} | **Capacidade:** {item['c']}")
                     st.link_button("📍 Abrir no Google Maps", gerar_link_mapas(item['nome']))
                     st.markdown("---")
+
+with tab2:
+    st.header("📍 Mapa Geral")
+    df = pd.DataFrame.from_dict(atrativos_db, orient='index')
+    df = df.rename(columns={'lat': 'latitude', 'lon': 'longitude'})
+    st.map(df)
+
+with tab3:
+    st.header("🧠 Inteligência Artificial Não Generativa")
+    st.write("O FluxoTur utiliza uma arquitetura de Inteligência Artificial Não Generativa. Priorizamos a precisão analítica e a confiança, transformando o planejamento do passeio em uma ciência exata baseada em dados reais de Foz do Iguaçu.")
