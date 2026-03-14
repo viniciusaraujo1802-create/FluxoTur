@@ -5,29 +5,34 @@ import pandas as pd
 # --- CONFIGURAÇÃO ---
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# --- VLIBRAS ---
+# --- VLIBRAS CORRIGIDO ---
 def injetar_vlibras():
     vlibras_html = """
     <div vw class="enabled">
-        <div vw-access-button class="active"></div>
-        <div vw-plugin-wrapper>
-            <div class="vw-plugin-top-wrapper"></div>
-        </div>
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
     </div>
+
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+
     <script>
+      window.onload = function() {
         new window.VLibras.Widget('https://vlibras.gov.br/app');
+      }
     </script>
+
     <style>
-        [vw] { 
-            position: fixed !important; 
-            bottom: 30px !important; 
-            right: 30px !important; 
-            z-index: 99999999 !important; 
-        }
+    [vw] {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 999999;
+    }
     </style>
     """
-    st.markdown(vlibras_html, unsafe_allow_html=True)
+    st.components.v1.html(vlibras_html, height=0)
 
 injetar_vlibras()
 
@@ -75,7 +80,11 @@ with tab1:
     st.title("🌍 FluxoTur")
     st.subheader("Planejamento Inteligente de Roteiro Turístico - Foz do Iguaçu")
 
-    st.markdown("Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros turísticos.")
+    st.markdown(
+        "Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur especializada na otimização de roteiros "
+        "com os atrativos encontrados no site "
+        "[Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/)."
+    )
 
     st.markdown("💡 Categorias: **Natureza | Esporte | Cultura | Lazer | Experiência**")
 
@@ -88,24 +97,31 @@ with tab1:
 
         for nome, item in atrativos_db.items():
 
-            score = round(random.uniform(5.3,10.5),1)
+            if pesquisa == "" or pesquisa.lower() in item["cat"].lower():
 
-            reputacao = round(random.uniform(3.0,4.9),1)
+                score = round(random.uniform(5.3,10.5),1)
 
-            transito = random.choice(["Intenso","Não Intenso"])
+                reputacao = round(random.uniform(3.0,4.9),1)
 
-            capacidade = random.choice(["Lotado","Não Lotado"])
+                transito = random.choice(["Intenso","Não Intenso"])
 
-            resultados.append({
-                "nome": nome,
-                "score": score,
-                "reputacao": reputacao,
-                "transito": transito,
-                "capacidade": capacidade,
-                "item": item
-            })
+                capacidade = random.choice(["Lotado","Não Lotado"])
+
+                resultados.append({
+                    "nome": nome,
+                    "score": score,
+                    "reputacao": reputacao,
+                    "transito": transito,
+                    "capacidade": capacidade,
+                    "item": item
+                })
 
         resultados = sorted(resultados, key=lambda x: x["score"], reverse=True)
+
+        if pesquisa == "":
+            st.success(f"🤖 Aqui estão os **{len(resultados)} atrativos encontrados**.")
+        else:
+            st.success(f"🤖 Aqui estão os **atrativos relacionados a {pesquisa} encontrados**.")
 
         for r in resultados:
 
@@ -152,27 +168,22 @@ with tab3:
 
 O **FluxoTur** utiliza uma arquitetura de **Inteligência Artificial Não Generativa**.
 
-Diferente de sistemas de IA generativa, que produzem textos, imagens ou conteúdos novos, o FluxoTur atua como um **sistema de análise e recomendação baseado em dados estruturados**.
+Diferente de sistemas de IA generativa, que produzem textos ou imagens, o FluxoTur atua como um **sistema de análise e recomendação baseado em dados estruturados**.
 
-Na prática, a IA analisa diferentes variáveis dos atrativos turísticos, como:
+Na prática, a IA analisa variáveis como:
 
 • reputação digital  
 • fluxo de trânsito  
-• capacidade de carga do atrativo  
-• categoria turística  
-• score de prioridade de visita
+• capacidade de carga  
+• categoria do atrativo  
+• score de prioridade turística  
 
-A partir dessas variáveis o sistema realiza três etapas principais:
+Com base nesses dados o sistema:
 
-**1 – Triagem de atrativos**  
-Identifica quais locais são relevantes para o visitante.
+1️⃣ identifica os atrativos relevantes  
+2️⃣ avalia as condições de visitação  
+3️⃣ organiza os locais em ordem de prioridade
 
-**2 – Avaliação de condições de visitação**  
-Analisa trânsito, lotação e reputação digital.
-
-**3 – Otimização do roteiro turístico**  
-Organiza os atrativos em ordem de prioridade de visita.
-
-Assim, o **FluxoTur atua como um assistente inteligente de planejamento turístico**, ajudando o visitante a decidir **quando e onde visitar cada atrativo em Foz do Iguaçu** de forma mais eficiente.
+Assim o **FluxoTur funciona como um assistente inteligente de planejamento turístico**, ajudando o visitante a decidir **onde ir primeiro em Foz do Iguaçu**.
 
 """)
