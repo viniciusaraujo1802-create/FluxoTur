@@ -4,7 +4,6 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 from math import radians, sin, cos, sqrt, atan2
-from datetime import datetime
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
@@ -159,22 +158,28 @@ with tab2:
         st.subheader("🎒 Meu Diário de Viagem")
         roteiro = st.multiselect("Selecione seus pontos no mapa:", list(atrativos_db.keys()))
         
+        # Bloco de Notas e Relógio por Atrativo
         notas_roteiro = {}
         if roteiro:
             st.write("---")
             for local in roteiro:
                 with st.expander(f"📍 {local}"):
+                    # Inicializamos com horário padrão para não disparar erro
                     hora = st.time_input(f"Horário de chegada em {local}", key=f"time_{local}")
                     atividade = st.text_area(f"O que farei aqui?", key=f"note_{local}")
                     notas_roteiro[local] = {"hora": hora, "atividade": atividade}
-        
-        hora_atual = datetime.now().time()
-        
-        for local, info in notas_roteiro.items():
-            if hora_atual > info["hora"]:
-                st.warning(f"⚠️ Atenção: O tempo em {local} esgotou! Siga para o próximo destino.")
 
     with col_mapa:
+        # Usaremos o tiles="CartoDB positron" que é estável e compatível
+        # Para o aspecto "antigo", vamos injetar um filtro de cor sépia no mapa
+        st.markdown("""
+            <style>
+            .folium-map {
+                filter: sepia(0.8) hue-rotate(30deg) saturate(0.5);
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
         mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="CartoDB positron")
         
         coords = []
@@ -182,10 +187,11 @@ with tab2:
             lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
             coords.append([lat, lon])
             
+            # Marcador com ícone mais clássico
             folium.Marker(
                 [lat, lon],
                 popup=f"Etapa {i+1}: {nome}",
-                icon=folium.Icon(color="darkred", icon="info-sign")
+                icon=folium.Icon(color="orange", icon="bookmark") 
             ).add_to(mapa_antigo)
             
         if len(coords) > 1:
