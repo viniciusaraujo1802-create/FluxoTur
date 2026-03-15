@@ -170,32 +170,40 @@ with tab2:
                     notas_roteiro[local] = {"hora": hora, "atividade": atividade}
 
     with col_mapa:
-        # Usaremos o tiles="CartoDB positron" que é estável e compatível
-        # Para o aspecto "antigo", vamos injetar um filtro de cor sépia no mapa
+        # Usamos o "OpenStreetMap" padrão (o mais estável do mundo)
+        mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="OpenStreetMap")
+        
+        # Filtro CSS para deixar o mapa com tom sépia (antigo)
         st.markdown("""
             <style>
-            .folium-map {
-                filter: sepia(0.8) hue-rotate(30deg) saturate(0.5);
+            .stFolium {
+                filter: sepia(90%) hue-rotate(350deg) brightness(95%);
+                border: 4px solid #4E342E;
             }
             </style>
         """, unsafe_allow_html=True)
 
-        mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="CartoDB positron")
-        
         coords = []
         for i, nome in enumerate(roteiro):
             lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
             coords.append([lat, lon])
             
-            # Marcador com ícone mais clássico
+            # Marcador
             folium.Marker(
                 [lat, lon],
-                popup=f"Etapa {i+1}: {nome}",
-                icon=folium.Icon(color="orange", icon="bookmark") 
+                popup=f"{i+1}: {nome}",
+                icon=folium.Icon(color="red", icon="info-sign")
             ).add_to(mapa_antigo)
             
+        # Linha que segue a ORDEM da sua seleção
         if len(coords) > 1:
-            folium.PolyLine(coords, color="#8B4513", weight=5, opacity=0.8, dash_array='10').add_to(mapa_antigo)
+            folium.PolyLine(
+                coords, 
+                color="#4E342E", 
+                weight=6, 
+                opacity=0.8, 
+                dash_array='10'
+            ).add_to(mapa_antigo)
             
         st_folium(mapa_antigo, use_container_width=True, height=500)
 
