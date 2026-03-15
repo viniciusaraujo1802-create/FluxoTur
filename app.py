@@ -7,7 +7,7 @@ from math import radians, sin, cos, sqrt, atan2
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# ---------------- CSS PARA FUNDO, PELÍCULA E LEITURA ----------------
+# ---------------- CSS PARA FUNDO E ESTILIZAÇÃO DOS INPUTS ----------------
 st.markdown(
     """
     <style>
@@ -20,36 +20,38 @@ st.markdown(
         background-attachment: fixed;
     }
 
-    /* 2. Texto Geral Preto */
-    h1, h2, h3, p, label, div, span {
+    /* 2. Forçar todos os inputs (text_input e multiselect) para o seu padrão: Fundo branco, borda preta */
+    div[data-baseweb="input"], 
+    div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        border: 2px solid #000000 !important;
+        border-radius: 4px !important;
+    }
+
+    /* 3. Garantir texto preto dentro dos campos */
+    input, span, div[role="combobox"] {
         color: #000000 !important;
         font-weight: bold !important;
     }
 
-    /* 3. CORREÇÃO: Fundo e texto dos componentes Multiselect/Dropdown */
-    /* Fundo da caixa principal */
-    div[data-baseweb="select"] {
-        background-color: #333333 !important;
-    }
-    /* Texto dentro da caixa principal */
-    div[data-baseweb="select"] span {
-        color: #FFFFFF !important;
-    }
-    /* Fundo da lista que abre (menu dropdown) */
-    div[role="listbox"] {
-        background-color: #333333 !important;
-    }
-    /* Texto dos itens na lista que abre */
-    div[role="listbox"] div {
-        color: #FFFFFF !important;
+    /* 4. Cor do texto dos rótulos (labels) */
+    label, h1, h2, h3, p {
+        color: #000000 !important;
+        font-weight: bold !important;
     }
 
-    /* 4. Estilo do Botão */
+    /* 5. Estilo do Botão */
     div.stButton > button {
         background-color: #FFFFFF !important; 
         color: #000000 !important;
         font-weight: bold !important;
         border: 2px solid #000000 !important;
+    }
+    
+    /* 6. Estilo específico do mapa (Sépia) */
+    .stFolium {
+        filter: sepia(90%) hue-rotate(350deg) brightness(95%);
+        border: 4px solid #4E342E;
     }
     </style>
     """,
@@ -128,15 +130,9 @@ tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📜 Fluxo do Viajante"
 
 with tab1:
     st.title("🌍 FluxoTur")
-    st.markdown("""
-    Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur IA especializada na criação de roteiros inteligentes com os atrativos de [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).
-    """)
+    st.markdown("Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur IA especializada na criação de roteiros inteligentes com os atrativos de [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).")
 
-    categoria_input = st.text_input(
-        "Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia",
-        key="cat_input"
-    )
-
+    categoria_input = st.text_input("Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia", key="cat_input")
     btn = st.button("🚀 Gerar roteiro inteligente")
 
     if btn or st.session_state.get("cat_input"):
@@ -146,20 +142,9 @@ with tab1:
                 reputacao = round(random.uniform(3.0, 4.9), 1)
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
-                
-                score_bruto = (reputacao * 2.0)
-                score_bruto += 1.0 if transito == "Não Intenso" else -1.0
-                score_bruto += 1.0 if capacidade == "Não Lotado" else -1.0
-
-                min_alvo, max_alvo = 5.3, 10.5
-                min_atual, max_atual = 4.0, 11.8
-                score_norm = min_alvo + ((score_bruto - min_atual) * (max_alvo - min_alvo) / (max_atual - min_atual))
-                score = round(max(min_alvo, min(max_alvo, score_norm)), 1)
-
-                resultados.append({
-                    "nome": nome, "score": score, "reputacao": reputacao,
-                    "transito": transito, "capacidade": capacidade, "item": item
-                })
+                score_bruto = (reputacao * 2.0) + (1.0 if transito == "Não Intenso" else -1.0) + (1.0 if capacidade == "Não Lotado" else -1.0)
+                score = round(max(5.3, min(10.5, 5.3 + ((score_bruto - 4.0) * (10.5 - 5.3) / (11.8 - 4.0)))), 1)
+                resultados.append({"nome": nome, "score": score, "reputacao": reputacao, "transito": transito, "capacidade": capacidade, "item": item})
 
         resultados = sorted(resultados, key=lambda x: x["score"], reverse=True)
         st.success(f"Aqui estão os {len(resultados)} locais encontrados")
@@ -173,62 +158,25 @@ with tab1:
 
 with tab2:
     st.header("📜 Fluxo do Viajante em Foz")
-    
     col_input, col_mapa = st.columns([1, 2])
-
     with col_input:
         st.subheader("🎒 Meu Diário de Viagem")
         roteiro = st.multiselect("Selecione seus pontos no mapa:", list(atrativos_db.keys()))
-        
-        notas_roteiro = {}
         if roteiro:
             st.write("---")
             for local in roteiro:
                 with st.expander(f"📍 {local}"):
-                    hora = st.time_input(f"Horário de chegada em {local}", key=f"time_{local}")
-                    atividade = st.text_area(f"O que farei aqui?", key=f"note_{local}")
-                    notas_roteiro[local] = {"hora": hora, "atividade": atividade}
-
+                    st.time_input(f"Horário de chegada em {local}", key=f"time_{local}")
+                    st.text_area(f"O que farei aqui?", key=f"note_{local}")
     with col_mapa:
         mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="OpenStreetMap")
-        
-        st.markdown("""
-            <style>
-            .stFolium {
-                filter: sepia(90%) hue-rotate(350deg) brightness(95%);
-                border: 4px solid #4E342E;
-            }
-            </style>
-        """, unsafe_allow_html=True)
-
-        coords = []
+        coords = [[atrativos_db[n]["latitude"], atrativos_db[n]["longitude"]] for n in roteiro]
         for i, nome in enumerate(roteiro):
-            lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
-            coords.append([lat, lon])
-            
-            folium.Marker(
-                [lat, lon],
-                popup=f"{i+1}: {nome}",
-                icon=folium.Icon(color="red", icon="info-sign")
-            ).add_to(mapa_antigo)
-            
+            folium.Marker(coords[i], popup=f"{i+1}: {nome}", icon=folium.Icon(color="red", icon="info-sign")).add_to(mapa_antigo)
         if len(coords) > 1:
-            folium.PolyLine(
-                coords, 
-                color="#4E342E", 
-                weight=6, 
-                opacity=0.8, 
-                dash_array='10'
-            ).add_to(mapa_antigo)
-            
+            folium.PolyLine(coords, color="#4E342E", weight=6, opacity=0.8, dash_array='10').add_to(mapa_antigo)
         st_folium(mapa_antigo, use_container_width=True, height=500)
 
 with tab3:
     st.header("🧠 Entenda a Inteligência do FluxoTur")
-    st.markdown("""
-    O FluxoTur foi concebido como uma ferramenta de apoio à decisão turística em tempo real, utilizando uma lógica de otimização ponderada que vai além de uma simples lista de atrativos. Diferente de sistemas convencionais, nosso algoritmo processa informações estruturadas para calcular o Índice de Otimização da Experiência, um valor que reflete o equilíbrio ideal entre qualidade, agilidade e conforto. Ao priorizar locais com reputações digitais elevadas enquanto ponderamos as condições atuais de trânsito e a capacidade de carga dos espaços, transformamos dados brutos em uma recomendação personalizada que visa maximizar o seu aproveitamento em Foz do Iguaçu.
-    """)
-    st.markdown("""
-    **Sobre a Inteligência Artificial Não Generativa:**
-    Diferente dos modelos generativos que criam novos conteúdos ou textos baseados em probabilidades estatísticas, nossa IA não generativa atua com base em **lógica determinística e regras estruturadas**. Ela funciona processando dados reais e específicos em uma base de conhecimento curada, aplicando cálculos matemáticos precisos para classificar e recomendar atrativos. Em vez de "imaginar" uma resposta, o sistema avalia variáveis quantificáveis — como reputação, fluxo e capacidade — para entregar um resultado objetivo, consistente e livre de alucinações, garantindo que o roteiro sugerido seja sempre pautado na realidade atual dos pontos turísticos de Foz do Iguaçu.
-    """)
+    st.markdown("O FluxoTur foi concebido como uma ferramenta de apoio à decisão turística em tempo real, utilizando uma lógica de otimização ponderada. **Sobre a Inteligência Artificial Não Generativa:** Atuamos com base em lógica determinística e regras estruturadas, garantindo que o roteiro seja pautado na realidade.")
