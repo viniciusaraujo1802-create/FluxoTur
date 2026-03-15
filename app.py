@@ -150,26 +150,32 @@ with tab1:
             st.markdown("---")
 
 with tab2:
-    # Cria o mapa base com estilo Toner (P&B)
-    mapa_antigo = folium.Map(
-        location=[-25.58, -54.55], 
-        zoom_start=11, 
-        tiles="https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.png",
-        attr='Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-    )
+    # A variável 'roteiro' não existe aqui, então definimos como todos os itens para exibição geral
+    roteiro = list(atrativos_db.keys())
+    
+    # Criamos o mapa base
+    mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="CartoDB positron")
+    
+    # Adicionamos uma camada de "Papel Envelhecido" via TileLayer
+    folium.TileLayer(
+        tiles='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        attr='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        name='Mapa Antigo',
+        overlay=True,
+        control=True
+    ).add_to(mapa_antigo)
 
-    # Injeção de CSS para o efeito visual "Antigo/Sépia"
+    # Injeção de CSS direto para o contêiner do mapa (FORÇADO)
     st.markdown("""
         <style>
         .stFolium {
             border: 5px solid #5D4037 !important;
             border-radius: 10px;
-            filter: sepia(100%) saturate(60%) brightness(85%) hue-rotate(330deg);
+            filter: sepia(100%) saturate(50%) brightness(90%) hue-rotate(330deg);
         }
         </style>
     """, unsafe_allow_html=True)
 
-    roteiro = list(atrativos_db.keys())
     coords = []
     for i, nome in enumerate(roteiro):
         lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
