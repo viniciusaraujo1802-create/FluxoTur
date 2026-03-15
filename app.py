@@ -22,6 +22,13 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }}
+    /* Ajuste para o texto do Multiselect ficar branco no fundo escuro */
+    div[data-baseweb="select"] {{
+        background-color: #000000 !important;
+    }}
+    div[data-baseweb="select"] span, div[role="listbox"] div {{
+        color: #FFFFFF !important;
+    }}
     /* Estilo do Botão: Fundo Branco, Texto Preto, Borda Preta */
     div.stButton > button {{
         background-color: #FFFFFF !important; 
