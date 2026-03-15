@@ -4,6 +4,7 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 from math import radians, sin, cos, sqrt, atan2
+from datetime import datetime
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
@@ -102,7 +103,7 @@ atrativos_db = {
 }
 
 # ---------------- INTERFACE ----------------
-tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠 Entenda o FluxoTur"])
+tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📜 Jornada do Aventureiro", "🧠 Entenda o FluxoTur"])
 
 with tab1:
     st.title("🌍 FluxoTur")
@@ -150,10 +151,47 @@ with tab1:
             st.markdown("---")
 
 with tab2:
-    mapa = folium.Map(location=[-25.58, -54.55], zoom_start=10)
-    for nome, item in atrativos_db.items():
-        folium.Marker([item["latitude"], item["longitude"]], popup=nome).add_to(mapa)
-    st_folium(mapa, use_container_width=True, height=600)
+    st.header("📜 Jornada do Aventureiro em Foz")
+    
+    col_input, col_mapa = st.columns([1, 2])
+
+    with col_input:
+        st.subheader("🎒 Meu Diário de Viagem")
+        roteiro = st.multiselect("Selecione seus pontos no mapa:", list(atrativos_db.keys()))
+        
+        notas_roteiro = {}
+        if roteiro:
+            st.write("---")
+            for local in roteiro:
+                with st.expander(f"📍 {local}"):
+                    hora = st.time_input(f"Horário de chegada em {local}", key=f"time_{local}")
+                    atividade = st.text_area(f"O que farei aqui?", key=f"note_{local}")
+                    notas_roteiro[local] = {"hora": hora, "atividade": atividade}
+        
+        hora_atual = datetime.now().time()
+        
+        for local, info in notas_roteiro.items():
+            if hora_atual > info["hora"]:
+                st.warning(f"⚠️ Atenção: O tempo em {local} esgotou! Siga para o próximo destino.")
+
+    with col_mapa:
+        mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="CartoDB positron")
+        
+        coords = []
+        for i, nome in enumerate(roteiro):
+            lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
+            coords.append([lat, lon])
+            
+            folium.Marker(
+                [lat, lon],
+                popup=f"Etapa {i+1}: {nome}",
+                icon=folium.Icon(color="darkred", icon="info-sign")
+            ).add_to(mapa_antigo)
+            
+        if len(coords) > 1:
+            folium.PolyLine(coords, color="#8B4513", weight=5, opacity=0.8, dash_array='10').add_to(mapa_antigo)
+            
+        st_folium(mapa_antigo, use_container_width=True, height=500)
 
 with tab3:
     st.header("🧠 Entenda a Inteligência do FluxoTur")
