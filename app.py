@@ -36,6 +36,20 @@ st.markdown(
         font-weight: bold !important;
         border: 2px solid #000000 !important;
     }}
+    
+    /* 1. Ajuste específico para o texto dentro dos expanders (Tab 2) */
+    div[data-testid="stExpander"] div[data-baseweb="markdown"] p, 
+    div[data-testid="stExpander"] label,
+    div[data-testid="stExpander"] div {{
+        color: #FFFFFF !important;
+    }}
+
+    /* 2. Opcional: Se quiser garantir que os inputs dentro do expander também fiquem legíveis */
+    div[data-testid="stExpander"] input, 
+    div[data-testid="stExpander"] textarea {{
+        color: #FFFFFF !important;
+        background-color: #333333 !important; 
+    }}
     </style>
     """,
     unsafe_allow_html=True
