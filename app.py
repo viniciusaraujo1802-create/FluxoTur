@@ -197,9 +197,10 @@ with tab1:
                 reputacao = round(random.uniform(3.0, 4.9), 1)
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
-                score = round((reputacao * 2.0) + (1.0 if transito == "Não Intenso" else -1.0) + (1.0 if capacidade == "Não Lotado" else -1.0), 1)
+                score = round((reputacao * 2.0) + (0.4 if transito == "Não Intenso" else -0.3) + (0.3 if capacidade == "Não Lotado" else -0.2), 1)
                 resultados.append({"nome": nome, "score": score, "reputacao": reputacao, "transito": transito, "capacidade": capacidade, "item": item})
         
+        st.write("Aqui estão os 100 atrativos encontrados")
         for r in sorted(resultados, key=lambda x: x["score"], reverse=True):
             st.markdown(f"### 📍 {r['nome']} ⭐ {r['score']}")
             st.write(f"**Reputação:** {r['reputacao']} | **Trânsito:** {r['transito']} | **Carga:** {r['capacidade']}")
@@ -220,4 +221,4 @@ with tab2:
 
 with tab3:
     st.header("🧠 Entenda a Inteligência do FluxoTur")
-    st.markdown("O FluxoTur é uma ferramenta de apoio à decisão turística baseada em lógica determinística e regras estruturadas, garantindo resultados objetivos e consistentes.")
+    st.write("O FluxoTur é classificado como uma inteligência artificial não generativa por não criar novos conteúdos ou textos de forma autônoma a partir de padrões probabilísticos. Diferente dos modelos de linguagem que geram respostas criativas e imprevisíveis, o sistema opera estritamente com base em lógica determinística e regras de negócio predefinidas. Isso significa que, para cada entrada específica, a ferramenta processa os dados de uma base estruturada e segue algoritmos de cálculo fixos, o que garante que as recomendações sejam sempre baseadas em critérios técnicos e objetivos. O resultado final é uma experiência de planejamento turístico altamente consistente, confiável e alinhada com as informações reais dos atrativos cadastrados no sistema, evitando alucinações ou variações indesejadas no roteiro sugerido ao usuário.")
