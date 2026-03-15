@@ -171,7 +171,7 @@ atrativos_db = {
     "Costelão ao Fogo de Chão": {"cat": "Gastronomia", "latitude": -25.550, "longitude": -54.570, "dica": "Experiência gastronômica tradicional do sul do Brasil."},
     "Entrevero de Pinhão": {"cat": "Gastronomia", "latitude": -25.550, "longitude": -54.570, "dica": "Prato regional servido em diversos restaurantes locais."},
     "Refúgio Biológico Bela Vista": {"cat": "Natureza", "latitude": -25.410, "longitude": -54.550, "dica": "Área ambiental protegida dentro da usina de Itaipu."},
-    "Recanto Cataratas": {"cat": "Hotelaria", "latitude": -25.530, "longitude": -54.580, "dica": "Resort com piscinas termais e infraestrutura completa."},
+    "Recanto das Cataratas": {"cat": "Hotelaria", "latitude": -25.530, "longitude": -54.580, "dica": "Resort com piscinas termais e infraestrutura completa."},
     "Shopping Mercosul": {"cat": "Lazer", "latitude": -25.540, "longitude": -54.580, "dica": "Centro de compras tradicional no centro da cidade."},
     "Marco das Três Fronteiras - Argentina": {"cat": "Cultura", "latitude": -25.600, "longitude": -54.590, "dica": "Obelisco histórico do lado argentino na tríplice fronteira."},
     "El Quincho del Tío Querido": {"cat": "Gastronomia", "latitude": -25.600, "longitude": -54.570, "dica": "Restaurante tradicional argentino em Puerto Iguazú."},
@@ -197,7 +197,7 @@ with tab1:
                 reputacao = round(random.uniform(3.0, 4.9), 1)
                 transito = random.choice(["Intenso", "Não Intenso"])
                 capacidade = random.choice(["Lotado", "Não Lotado"])
-                score = round((reputacao * 1.5) + (1.5 if transito == "Não Intenso" else 0.5) + (1.5 if capacidade == "Não Lotado" else 0.3), 1)
+                score = round((reputacao * 2.0) + (0.4 if transito == "Não Intenso" else -0.3) + (0.3 if capacidade == "Não Lotado" else -0.2), 1)
                 resultados.append({"nome": nome, "score": score, "reputacao": reputacao, "transito": transito, "capacidade": capacidade, "item": item})
         
         st.write("Aqui estão os 100 atrativos encontrados")
@@ -210,16 +210,16 @@ with tab1:
 
 with tab2:
     st.header("📜 Fluxo do Viajante em Foz")
+    st.subheader("📎 Meu Diário de Viagem")
     col_input, col_mapa = st.columns([1, 2])
     with col_input:
         roteiro = st.multiselect("Selecione seus pontos no mapa:", list(atrativos_db.keys()))
-        if roteiro:
-            st.write("Seu roteiro selecionado:")
-            for ponto in roteiro:
-                st.write(f"**{ponto}**")
-                hora = st.time_input(f"Horário de visita para {ponto}")
-                acao = st.text_area(f"O que vou fazer nesse atrativo?", key=f"acao_{ponto}")
-                st.markdown("---")
+        for ponto in roteiro:
+            st.markdown("---")
+            st.markdown(f"📍 **{ponto}**")
+            st.time_input(f"Horário de chegada em {ponto}", key=f"hora_{ponto}")
+            st.text_area(f"O que farei aqui?", key=f"acao_{ponto}")
+            
     with col_mapa:
         mapa = folium.Map(location=[-25.58, -54.55], zoom_start=11)
         for nome in roteiro:
