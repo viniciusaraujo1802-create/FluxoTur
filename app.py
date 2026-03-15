@@ -102,7 +102,7 @@ atrativos_db = {
 }
 
 # ---------------- INTERFACE ----------------
-tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📜 Jornada do Aventureiro", "🧠 Entenda o FluxoTur"])
+tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📜 Fluxo do Viajante", "🧠 Entenda o FluxoTur"])
 
 with tab1:
     st.title("🌍 FluxoTur")
@@ -150,7 +150,7 @@ with tab1:
             st.markdown("---")
 
 with tab2:
-    st.header("📜 Jornada do Aventureiro em Foz")
+    st.header("📜 Fluxo do Viajante em Foz")
     
     col_input, col_mapa = st.columns([1, 2])
 
