@@ -1,6 +1,3 @@
-Aqui está o código completo, com a base de dados atualizada contendo todos os novos atrativos incluídos, preservando integralmente a estrutura e a lógica anteriores.
-
-```python
 import streamlit as st
 import random
 import pandas as pd
