@@ -9,47 +9,48 @@ st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
 # ---------------- CSS PARA FUNDO, PELÍCULA E LEITURA ----------------
 st.markdown(
-    f"""
+    """
     <style>
-    .stApp {{
+    /* 1. Design Geral do Fundo */
+    .stApp {
         background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), 
                     url("https://i.ibb.co/cSzgTZ7x/download-1.jpg");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
-    }}
-    .stApp, .stMarkdown, .stText, .stTextInput, .stButton, p, h1, h2, h3, div, label, span {{
+    }
+
+    /* 2. Texto Geral Preto */
+    h1, h2, h3, p, label, div, span {
         color: #000000 !important;
         font-weight: bold !important;
-    }}
-    /* Ajuste para o texto do Multiselect ficar branco no fundo escuro */
-    div[data-baseweb="select"] {{
-        background-color: #000000 !important;
-    }}
-    div[data-baseweb="select"] span, div[role="listbox"] div {{
+    }
+
+    /* 3. CORREÇÃO: Fundo e texto dos componentes Multiselect/Dropdown */
+    /* Fundo da caixa principal */
+    div[data-baseweb="select"] {
+        background-color: #333333 !important;
+    }
+    /* Texto dentro da caixa principal */
+    div[data-baseweb="select"] span {
         color: #FFFFFF !important;
-    }}
-    /* Estilo do Botão: Fundo Branco, Texto Preto, Borda Preta */
-    div.stButton > button {{
+    }
+    /* Fundo da lista que abre (menu dropdown) */
+    div[role="listbox"] {
+        background-color: #333333 !important;
+    }
+    /* Texto dos itens na lista que abre */
+    div[role="listbox"] div {
+        color: #FFFFFF !important;
+    }
+
+    /* 4. Estilo do Botão */
+    div.stButton > button {
         background-color: #FFFFFF !important; 
         color: #000000 !important;
         font-weight: bold !important;
         border: 2px solid #000000 !important;
-    }}
-    
-    /* 1. Ajuste específico para o texto dentro dos expanders (Tab 2) */
-    div[data-testid="stExpander"] div[data-baseweb="markdown"] p, 
-    div[data-testid="stExpander"] label,
-    div[data-testid="stExpander"] div {{
-        color: #FFFFFF !important;
-    }}
-
-    /* 2. Opcional: Se quiser garantir que os inputs dentro do expander também fiquem legíveis */
-    div[data-testid="stExpander"] input, 
-    div[data-testid="stExpander"] textarea {{
-        color: #FFFFFF !important;
-        background-color: #333333 !important; 
-    }}
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -179,22 +180,18 @@ with tab2:
         st.subheader("🎒 Meu Diário de Viagem")
         roteiro = st.multiselect("Selecione seus pontos no mapa:", list(atrativos_db.keys()))
         
-        # Bloco de Notas e Relógio por Atrativo
         notas_roteiro = {}
         if roteiro:
             st.write("---")
             for local in roteiro:
                 with st.expander(f"📍 {local}"):
-                    # Inicializamos com horário padrão para não disparar erro
                     hora = st.time_input(f"Horário de chegada em {local}", key=f"time_{local}")
                     atividade = st.text_area(f"O que farei aqui?", key=f"note_{local}")
                     notas_roteiro[local] = {"hora": hora, "atividade": atividade}
 
     with col_mapa:
-        # Usamos o "OpenStreetMap" padrão (o mais estável do mundo)
         mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="OpenStreetMap")
         
-        # Filtro CSS para deixar o mapa com tom sépia (antigo)
         st.markdown("""
             <style>
             .stFolium {
@@ -209,14 +206,12 @@ with tab2:
             lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
             coords.append([lat, lon])
             
-            # Marcador
             folium.Marker(
                 [lat, lon],
                 popup=f"{i+1}: {nome}",
                 icon=folium.Icon(color="red", icon="info-sign")
             ).add_to(mapa_antigo)
             
-        # Linha que segue a ORDEM da sua seleção
         if len(coords) > 1:
             folium.PolyLine(
                 coords, 
