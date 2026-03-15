@@ -72,7 +72,7 @@ injetar_vlibras()
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
 
-# ---------------- BASES DE DADOS (Mantidas conforme o original) ----------------
+# ---------------- BASES DE DADOS ----------------
 atrativos_db = {
     "Adrena Kart Kartódromo": {"cat": "Esporte", "latitude": -25.534, "longitude": -54.545, "dica": "Acelere em uma das pistas de kart mais famosas da cidade."},
     "Aguaray Eco": {"cat": "Natureza", "latitude": -25.617, "longitude": -54.484, "dica": "Trilhas ecológicas em meio à mata preservada."},
@@ -243,8 +243,8 @@ with tab1:
     st.title("🌍 FluxoTur")
     st.markdown("Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur IA especializada na criação de roteiros inteligentes com os atrativos de [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).")
     
-    # Categoria sem "Hotelaria"
-    categoria_input = st.text_input("Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia", key="cat_input")
+    # Campo alterado para "Digite o tipo de turismo"
+    categoria_input = st.text_input("Digite o tipo de turismo: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia", key="cat_input")
     btn = st.button("🚀 Gerar roteiro inteligente")
 
     if btn or st.session_state.get("cat_input"):
