@@ -102,7 +102,7 @@ atrativos_db = {
 }
 
 # ---------------- INTERFACE ----------------
-tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📜 Jornada do Aventureiro", "🧠 Entenda o FluxoTur"])
+tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📍 Mapa Geral", "🧠 Entenda o FluxoTur"])
 
 with tab1:
     st.title("🌍 FluxoTur")
@@ -150,54 +150,42 @@ with tab1:
             st.markdown("---")
 
 with tab2:
-    st.header("📜 Jornada do Aventureiro em Foz")
+    # A variável 'roteiro' não existe aqui, então definimos como todos os itens para exibição geral
+    roteiro = list(atrativos_db.keys())
     
-    col_input, col_mapa = st.columns([1, 2])
+    # Criamos o mapa base
+    mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="CartoDB positron")
+    
+    # Adicionamos uma camada de "Papel Envelhecido" via TileLayer
+    folium.TileLayer(
+        tiles='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        attr='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        name='Mapa Antigo',
+        overlay=True,
+        control=True
+    ).add_to(mapa_antigo)
 
-    with col_input:
-        st.subheader("🎒 Meu Diário de Viagem")
-        roteiro = st.multiselect("Selecione seus pontos no mapa:", list(atrativos_db.keys()))
-        
-        # Bloco de Notas e Relógio por Atrativo
-        notas_roteiro = {}
-        if roteiro:
-            st.write("---")
-            for local in roteiro:
-                with st.expander(f"📍 {local}"):
-                    # Inicializamos com horário padrão para não disparar erro
-                    hora = st.time_input(f"Horário de chegada em {local}", key=f"time_{local}")
-                    atividade = st.text_area(f"O que farei aqui?", key=f"note_{local}")
-                    notas_roteiro[local] = {"hora": hora, "atividade": atividade}
+    # Injeção de CSS direto para o contêiner do mapa (FORÇADO)
+    st.markdown("""
+        <style>
+        .stFolium {
+            border: 5px solid #5D4037 !important;
+            border-radius: 10px;
+            filter: sepia(100%) saturate(50%) brightness(90%) hue-rotate(330deg);
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-    with col_mapa:
-        # Usaremos o tiles="CartoDB positron" que é estável e compatível
-        # Para o aspecto "antigo", vamos injetar um filtro de cor sépia no mapa
-        st.markdown("""
-            <style>
-            .folium-map {
-                filter: sepia(0.8) hue-rotate(30deg) saturate(0.5);
-            }
-            </style>
-        """, unsafe_allow_html=True)
-
-        mapa_antigo = folium.Map(location=[-25.58, -54.55], zoom_start=11, tiles="CartoDB positron")
-        
-        coords = []
-        for i, nome in enumerate(roteiro):
-            lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
-            coords.append([lat, lon])
+    coords = []
+    for i, nome in enumerate(roteiro):
+        lat, lon = atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]
+        coords.append([lat, lon])
+        folium.Marker([lat, lon], popup=f"{i+1}: {nome}", icon=folium.Icon(color="darkred", icon="bookmark")).add_to(mapa_antigo)
             
-            # Marcador com ícone mais clássico
-            folium.Marker(
-                [lat, lon],
-                popup=f"Etapa {i+1}: {nome}",
-                icon=folium.Icon(color="orange", icon="bookmark") 
-            ).add_to(mapa_antigo)
+    if len(coords) > 1:
+        folium.PolyLine(coords, color="#5D4037", weight=5, opacity=0.9, dash_array='10').add_to(mapa_antigo)
             
-        if len(coords) > 1:
-            folium.PolyLine(coords, color="#8B4513", weight=5, opacity=0.8, dash_array='10').add_to(mapa_antigo)
-            
-        st_folium(mapa_antigo, use_container_width=True, height=500)
+    st_folium(mapa_antigo, use_container_width=True, height=500)
 
 with tab3:
     st.header("🧠 Entenda a Inteligência do FluxoTur")
