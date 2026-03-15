@@ -7,7 +7,7 @@ from math import radians, sin, cos, sqrt, atan2
 
 st.set_page_config(page_title="FluxoTur - X.TUR", layout="wide")
 
-# ---------------- CSS PARA FUNDO E ESTILIZAÇÃO DOS INPUTS ----------------
+# ---------------- CSS PARA FUNDO, ESTILIZAÇÃO E NEGRITO NOS TEXTOS ----------------
 st.markdown(
     """
     <style>
@@ -18,6 +18,11 @@ st.markdown(
         background-position: center;
         background-attachment: fixed;
     }
+    /* Estilização para garantir que os textos destacados fiquem pretos e em negrito */
+    .stMarkdown, .stWrite, p, li {
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
     div[data-baseweb="input"], div[data-baseweb="select"] {
         background-color: #FFFFFF !important;
         border: 2px solid #000000 !important;
@@ -27,7 +32,7 @@ st.markdown(
         color: #000000 !important;
         font-weight: bold !important;
     }
-    label, h1, h2, h3, p {
+    label, h1, h2, h3 {
         color: #000000 !important;
         font-weight: bold !important;
     }
@@ -67,7 +72,7 @@ injetar_vlibras()
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
 
-# ---------------- BASES DE DADOS ----------------
+# ---------------- BASES DE DADOS (Mantidas conforme o original) ----------------
 atrativos_db = {
     "Adrena Kart Kartódromo": {"cat": "Esporte", "latitude": -25.534, "longitude": -54.545, "dica": "Acelere em uma das pistas de kart mais famosas da cidade."},
     "Aguaray Eco": {"cat": "Natureza", "latitude": -25.617, "longitude": -54.484, "dica": "Trilhas ecológicas em meio à mata preservada."},
@@ -238,7 +243,8 @@ with tab1:
     st.title("🌍 FluxoTur")
     st.markdown("Olá! Sou o **X.Tur**, a inteligência artificial não generativa da FluxoTur IA especializada na criação de roteiros inteligentes com os atrativos de [Foz do Iguaçu Destino do Mundo](https://www.destino.foz.br/atrativos-e-passeios-em-foz-do-iguacu/).")
     
-    categoria_input = st.text_input("Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia - Hotelaria", key="cat_input")
+    # Categoria sem "Hotelaria"
+    categoria_input = st.text_input("Digite o tipo de experiência: Natureza - Lazer - Esporte - Experiência - Cultura - Gastronomia", key="cat_input")
     btn = st.button("🚀 Gerar roteiro inteligente")
 
     if btn or st.session_state.get("cat_input"):
