@@ -67,7 +67,7 @@ injetar_vlibras()
 def gerar_link_mapas(nome):
     return f"https://www.google.com/maps/search/?api=1&query={nome.replace(' ', '+')}+Foz+do+Iguacu"
 
-# ---------------- BASE DE ATRATIVOS ----------------
+# ---------------- BASES DE DADOS ----------------
 atrativos_db = {
     "Adrena Kart Kartódromo": {"cat": "Esporte", "latitude": -25.534, "longitude": -54.545, "dica": "Acelere em uma das pistas de kart mais famosas da cidade."},
     "Aguaray Eco": {"cat": "Natureza", "latitude": -25.617, "longitude": -54.484, "dica": "Trilhas ecológicas em meio à mata preservada."},
@@ -112,10 +112,6 @@ atrativos_db = {
     "Shopping Catuaí Palladium": {"cat": "Lazer", "latitude": -25.527, "longitude": -54.573, "dica": "Maior shopping da cidade."},
     "JL Cataratas Shopping": {"cat": "Lazer", "latitude": -25.539, "longitude": -54.584, "dica": "Shopping central de Foz do Iguaçu."},
     "277 CraftBeer": {"cat": "Gastronomia", "latitude": -25.540, "longitude": -54.580, "dica": "Cervejaria artesanal com rótulos locais e petiscos."},
-    "Smart Cataratas": {"cat": "Hotelaria", "latitude": -25.545, "longitude": -54.570, "dica": "Hotel moderno com ótima localização para turistas."},
-    "Hotel das Cataratas": {"cat": "Hotelaria", "latitude": -25.695, "longitude": -54.436, "dica": "Luxo e exclusividade dentro do Parque Nacional."},
-    "Grand Carima Resort": {"cat": "Hotelaria", "latitude": -25.580, "longitude": -54.520, "dica": "Resort amplo com lazer completo para famílias."},
-    "Rafain Palace Hotel": {"cat": "Hotelaria", "latitude": -25.550, "longitude": -54.560, "dica": "Tradicional centro de convenções e hospedagem."},
     "Restaurante Cabeza de Vaca": {"cat": "Gastronomia", "latitude": -25.405, "longitude": -54.588, "dica": "Comida brasileira com vista para a Usina de Itaipu."},
     "La Strega": {"cat": "Gastronomia", "latitude": -25.548, "longitude": -54.580, "dica": "Destaque em pratos mediterrâneos e ambiente aconchegante."},
     "Shopping Paris (PY)": {"cat": "Lazer", "latitude": -25.510, "longitude": -54.600, "dica": "Grande centro de compras internacional na fronteira."},
@@ -123,9 +119,6 @@ atrativos_db = {
     "Pátio Pomare": {"cat": "Gastronomia", "latitude": -25.530, "longitude": -54.580, "dica": "Espaço gastronômico a céu aberto com diversas opções."},
     "Falls Food Park": {"cat": "Gastronomia", "latitude": -25.540, "longitude": -54.585, "dica": "Vila gastronômica com food trucks e música ao vivo."},
     "Taj Bar Foz": {"cat": "Gastronomia", "latitude": -25.545, "longitude": -54.586, "dica": "Bar temático com culinária asiática e drinks autorais."},
-    "Hotel Bourbon Cataratas": {"cat": "Hotelaria", "latitude": -25.550, "longitude": -54.550, "dica": "Resort completo focado em famílias e eventos."},
-    "Viale Cataratas Hotel": {"cat": "Hotelaria", "latitude": -25.560, "longitude": -54.540, "dica": "Conforto e lazer próximo às principais vias de acesso."},
-    "Eco Cataratas Resort": {"cat": "Hotelaria", "latitude": -25.570, "longitude": -54.530, "dica": "Opção de hospedagem integrada com a natureza."},
     "Opy – Experiência Indígena": {"cat": "Cultura", "latitude": -25.620, "longitude": -54.480, "dica": "Vivência cultural na aldeia Tekoa Mirim."},
     "Trilha do Bananeiras": {"cat": "Natureza", "latitude": -25.690, "longitude": -54.440, "dica": "Passeio em trilha suspensa com foco em observação de aves."},
     "Espaço das Américas": {"cat": "Lazer", "latitude": -25.555, "longitude": -54.575, "dica": "Local para shows e eventos de grande porte em Foz."},
@@ -142,11 +135,6 @@ atrativos_db = {
     "Lumina Park": {"cat": "Lazer", "latitude": -25.600, "longitude": -54.580, "dica": "Parque iluminado com esculturas temáticas noturnas."},
     "Polo Astronômico de Itaipu": {"cat": "Cultura", "latitude": -25.405, "longitude": -54.588, "dica": "Observatório astronômico e planetário no complexo de Itaipu."},
     "Itaipu Ecomuseu": {"cat": "Cultura", "latitude": -25.405, "longitude": -54.588, "dica": "Museu que conta a história da construção da usina."},
-    "Recanto Cataratas Termas Resort": {"cat": "Hotelaria", "latitude": -25.530, "longitude": -54.580, "dica": "Resort com piscinas termais e lazer completo."},
-    "Wish Resort Golf Convention": {"cat": "Hotelaria", "latitude": -25.580, "longitude": -54.550, "dica": "Resort de luxo com campo de golfe próprio."},
-    "Bourbon Cataratas Do Iguaçu Resort": {"cat": "Hotelaria", "latitude": -25.550, "longitude": -54.550, "dica": "Resort consagrado para famílias em Foz."},
-    "San Rafael Comfort Class Hotel": {"cat": "Hotelaria", "latitude": -25.540, "longitude": -54.580, "dica": "Opção de hospedagem com bom custo-benefício."},
-    "Cataratas Park Hotel": {"cat": "Hotelaria", "latitude": -25.550, "longitude": -54.570, "dica": "Hotel voltado para eventos e grupos turísticos."},
     "Zeppelin Old Bar": {"cat": "Gastronomia", "latitude": -25.545, "longitude": -54.585, "dica": "Bar temático famoso pelo rock and roll e lanches."},
     "Kings Pub": {"cat": "Gastronomia", "latitude": -25.548, "longitude": -54.586, "dica": "Pub com música ao vivo e variedade de chopes."},
     "Madero Tango (Argentina)": {"cat": "Cultura", "latitude": -25.600, "longitude": -54.550, "dica": "Show de tango clássico com jantar em Puerto Iguazú."},
@@ -171,7 +159,6 @@ atrativos_db = {
     "Costelão ao Fogo de Chão": {"cat": "Gastronomia", "latitude": -25.550, "longitude": -54.570, "dica": "Experiência gastronômica tradicional do sul do Brasil."},
     "Entrevero de Pinhão": {"cat": "Gastronomia", "latitude": -25.550, "longitude": -54.570, "dica": "Prato regional servido em diversos restaurantes locais."},
     "Refúgio Biológico Bela Vista": {"cat": "Natureza", "latitude": -25.410, "longitude": -54.550, "dica": "Área ambiental protegida dentro da usina de Itaipu."},
-    "Recanto das Cataratas": {"cat": "Hotelaria", "latitude": -25.530, "longitude": -54.580, "dica": "Resort com piscinas termais e infraestrutura completa."},
     "Shopping Mercosul": {"cat": "Lazer", "latitude": -25.540, "longitude": -54.580, "dica": "Centro de compras tradicional no centro da cidade."},
     "Marco das Três Fronteiras - Argentina": {"cat": "Cultura", "latitude": -25.600, "longitude": -54.590, "dica": "Obelisco histórico do lado argentino na tríplice fronteira."},
     "El Quincho del Tío Querido": {"cat": "Gastronomia", "latitude": -25.600, "longitude": -54.570, "dica": "Restaurante tradicional argentino em Puerto Iguazú."},
@@ -180,8 +167,72 @@ atrativos_db = {
     "Feira de Artesanato de Ciudad del Este": {"cat": "Cultura", "latitude": -25.510, "longitude": -54.610, "dica": "Espaço para artesanato típico paraguaio."}
 }
 
+hoteis_db = {
+    "Smart Cataratas": {"estrelas": 3, "google": "https://www.google.com/search?q=Smart+Cataratas+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Smart+Cataratas+Foz+do+Iguacu"},
+    "Hotel das Cataratas": {"estrelas": 5, "google": "https://www.google.com/search?q=Hotel+das+Cataratas+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+das+Cataratas+Foz+do+Iguacu"},
+    "Grand Carima Resort": {"estrelas": 4, "google": "https://www.google.com/search?q=Grand+Carima+Resort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Grand+Carima+Resort+Foz+do+Iguacu"},
+    "Rafain Palace Hotel": {"estrelas": 4, "google": "https://www.google.com/search?q=Rafain+Palace+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Rafain+Palace+Hotel+Foz+do+Iguacu"},
+    "Hotel Bourbon Cataratas": {"estrelas": 5, "google": "https://www.google.com/search?q=Hotel+Bourbon+Cataratas+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Bourbon+Cataratas+Foz+do+Iguacu"},
+    "Viale Cataratas Hotel": {"estrelas": 4, "google": "https://www.google.com/search?q=Viale+Cataratas+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Viale+Cataratas+Hotel+Foz+do+Iguacu"},
+    "Eco Cataratas Resort": {"estrelas": 3, "google": "https://www.google.com/search?q=Eco+Cataratas+Resort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Eco+Cataratas+Resort+Foz+do+Iguacu"},
+    "Recanto Cataratas Termas Resort": {"estrelas": 5, "google": "https://www.google.com/search?q=Recanto+Cataratas+Termas+Resort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Recanto+Cataratas+Termas+Resort+Foz+do+Iguacu"},
+    "Wish Resort Golf Convention": {"estrelas": 5, "google": "https://www.google.com/search?q=Wish+Resort+Golf+Convention+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Wish+Resort+Golf+Convention+Foz+do+Iguacu"},
+    "Bourbon Cataratas Do Iguaçu Resort": {"estrelas": 5, "google": "https://www.google.com/search?q=Bourbon+Cataratas+Do+Iguacu+Resort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Bourbon+Cataratas+Do+Iguacu+Resort+Foz+do+Iguacu"},
+    "San Rafael Comfort Class Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=San+Rafael+Comfort+Class+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=San+Rafael+Comfort+Class+Hotel+Foz+do+Iguacu"},
+    "Cataratas Park Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=Cataratas+Park+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Cataratas+Park+Hotel+Foz+do+Iguacu"},
+    "Recanto das Cataratas": {"estrelas": 5, "google": "https://www.google.com/search?q=Recanto+das+Cataratas+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Recanto+das+Cataratas+Foz+do+Iguacu"},
+    "Shopping Mercosul": {"estrelas": 2, "google": "https://www.google.com/search?q=Hospedagem+perto+Shopping+Mercosul+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hospedagem+perto+Shopping+Mercosul+Foz+do+Iguacu"},
+    "Ponte Tancredo Neves": {"estrelas": 3, "google": "https://www.google.com/search?q=Hospedagem+perto+Ponte+Tancredo+Neves+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hospedagem+perto+Ponte+Tancredo+Neves+Foz+do+Iguacu"},
+    "Sanma Hotel Foz": {"estrelas": 4, "google": "https://www.google.com/search?q=Sanma+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Sanma+Hotel+Foz+do+Iguacu"},
+    "Bogari Hotel": {"estrelas": 4, "google": "https://www.google.com/search?q=Bogari+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Bogari+Hotel+Foz+do+Iguacu"},
+    "Nadai Confort Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=Nadai+Confort+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Nadai+Confort+Hotel+Foz+do+Iguacu"},
+    "Del Rey Quality Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=Del+Rey+Quality+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Del+Rey+Quality+Hotel+Foz+do+Iguacu"},
+    "Tarobá Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=Taroba+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Taroba+Hotel+Foz+do+Iguacu"},
+    "Hotel Foz do Iguaçu": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Foz+do+Iguacu"},
+    "Wyndham Golden Foz": {"estrelas": 4, "google": "https://www.google.com/search?q=Wyndham+Golden+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Wyndham+Golden+Foz+do+Iguacu"},
+    "Viale Tower Hotel": {"estrelas": 4, "google": "https://www.google.com/search?q=Viale+Tower+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Viale+Tower+Hotel+Foz+do+Iguacu"},
+    "Mabu Thermas Grand Resort": {"estrelas": 5, "google": "https://www.google.com/search?q=Mabu+Thermas+Grand+Resort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Mabu+Thermas+Grand+Resort+Foz+do+Iguacu"},
+    "Vivaz Cataratas Hotel Resort": {"estrelas": 4, "google": "https://www.google.com/search?q=Vivaz+Cataratas+Hotel+Resort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Vivaz+Cataratas+Hotel+Resort+Foz+do+Iguacu"},
+    "Ibis Foz do Iguaçu": {"estrelas": 3, "google": "https://www.google.com/search?q=Ibis+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Ibis+Foz+do+Iguacu"},
+    "Ibis Budget Foz do Iguaçu": {"estrelas": 2, "google": "https://www.google.com/search?q=Ibis+Budget+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Ibis+Budget+Foz+do+Iguacu"},
+    "Hotel das Cataratas Belmond": {"estrelas": 5, "google": "https://www.google.com/search?q=Belmond+Hotel+das+Cataratas+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Belmond+Hotel+das+Cataratas+Foz+do+Iguacu"},
+    "Pousada Sonho Meu": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+Sonho+Meu+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+Sonho+Meu+Foz+do+Iguacu"},
+    "Pousada Guata Porã": {"estrelas": 3, "google": "https://www.google.com/search?q=Pousada+Guata+Pora+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+Guata+Pora+Foz+do+Iguacu"},
+    "Hotel Bella Italia": {"estrelas": 4, "google": "https://www.google.com/search?q=Hotel+Bella+Italia+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Bella+Italia+Foz+do+Iguacu"},
+    "Continental Inn": {"estrelas": 4, "google": "https://www.google.com/search?q=Continental+Inn+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Continental+Inn+Foz+do+Iguacu"},
+    "Hotel Pietro Angelo": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Pietro+Angelo+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Pietro+Angelo+Foz+do+Iguacu"},
+    "Dom Pedro I Palace Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=Dom+Pedro+I+Palace+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Dom+Pedro+I+Palace+Hotel+Foz+do+Iguacu"},
+    "Hotel Salvatti": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Salvatti+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Salvatti+Foz+do+Iguacu"},
+    "Falls Galli Hotel": {"estrelas": 3, "google": "https://www.google.com/search?q=Falls+Galli+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Falls+Galli+Hotel+Foz+do+Iguacu"},
+    "Hotel Golden Park": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Golden+Park+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Golden+Park+Foz+do+Iguacu"},
+    "Pousada El Shaddai": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+El+Shaddai+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+El+Shaddai+Foz+do+Iguacu"},
+    "Concept Hotel Foz": {"estrelas": 4, "google": "https://www.google.com/search?q=Concept+Hotel+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Concept+Hotel+Foz+do+Iguacu"},
+    "Hotel Colonial Foz": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Colonial+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Colonial+Foz+do+Iguacu"},
+    "Hotel Ametista": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Ametista+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Ametista+Foz+do+Iguacu"},
+    "Pousada Recanto dos Passaros": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+Recanto+dos+Passaros+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+Recanto+dos+Passaros+Foz+do+Iguacu"},
+    "Hotel Estoril": {"estrelas": 2, "google": "https://www.google.com/search?q=Hotel+Estoril+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Estoril+Foz+do+Iguacu"},
+    "Hotel Rafain Centro": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Rafain+Centro+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Rafain+Centro+Foz+do+Iguacu"},
+    "San Juan Tour Foz": {"estrelas": 3, "google": "https://www.google.com/search?q=San+Juan+Tour+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=San+Juan+Tour+Foz+do+Iguacu"},
+    "Hotel Villa Canoas": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Villa+Canoas+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Villa+Canoas+Foz+do+Iguacu"},
+    "Hotel Dan Inn": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Dan+Inn+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Dan+Inn+Foz+do+Iguacu"},
+    "Hotel B&B Foz": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+B+and+B+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+B+and+B+Foz+do+Iguacu"},
+    "Pousada Samba Foz": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+Samba+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+Samba+Foz+do+Iguacu"},
+    "Pousada M10": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+M10+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+M10+Foz+do+Iguacu"},
+    "Hotel Foz Presidente Comfort": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Foz+Presidente+Comfort+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Foz+Presidente+Comfort+Foz+do+Iguacu"},
+    "Hotel Foz Presidente Elegance": {"estrelas": 4, "google": "https://www.google.com/search?q=Hotel+Foz+Presidente+Elegance+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Foz+Presidente+Elegance+Foz+do+Iguacu"},
+    "Hotel 3 Fronteiras": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+3+Fronteiras+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+3+Fronteiras+Foz+do+Iguacu"},
+    "Pousada 15 de Novembro": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+15+de+Novembro+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+15+de+Novembro+Foz+do+Iguacu"},
+    "Hotel Alvorada Iguassu": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Alvorada+Iguassu+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Alvorada+Iguassu+Foz+do+Iguacu"},
+    "Hotel Portinari": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Portinari+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Portinari+Foz+do+Iguacu"},
+    "Pousada dos Cavalheiros": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+dos+Cavalheiros+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+dos+Cavalheiros+Foz+do+Iguacu"},
+    "Hotel Torino": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Torino+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Torino+Foz+do+Iguacu"},
+    "Pousada Che Lagarto": {"estrelas": 2, "google": "https://www.google.com/search?q=Pousada+Che+Lagarto+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Pousada+Che+Lagarto+Foz+do+Iguacu"},
+    "Hotel Rouver": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Rouver+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Rouver+Foz+do+Iguacu"},
+    "Hotel Firenze": {"estrelas": 3, "google": "https://www.google.com/search?q=Hotel+Firenze+Foz+do+Iguacu&tbm=lcl", "tripadvisor": "https://www.tripadvisor.com.br/Search?q=Hotel+Firenze+Foz+do+Iguacu"}
+}
+
 # ---------------- INTERFACE ----------------
-tab1, tab2, tab3 = st.tabs(["🚀 Planejador FluxoTur", "📜 Fluxo do Viajante", "🧠 Entenda o FluxoTur"])
+tab1, tab2, tab3, tab4 = st.tabs(["🚀 Planejador FluxoTur", "🏨 Planejador Fluxo Hotéis", "📜 Fluxo do Viajante", "🧠 Entenda o FluxoTur"])
 
 with tab1:
     st.title("🌍 FluxoTur")
@@ -200,7 +251,7 @@ with tab1:
                 score = round((reputacao * 2.0) + (0.4 if transito == "Não Intenso" else -0.3) + (0.3 if capacidade == "Não Lotado" else -0.2), 1)
                 resultados.append({"nome": nome, "score": score, "reputacao": reputacao, "transito": transito, "capacidade": capacidade, "item": item})
         
-        st.write("Aqui estão os 100 atrativos encontrados")
+        st.write("Aqui estão os atrativos encontrados")
         for r in sorted(resultados, key=lambda x: x["score"], reverse=True):
             st.markdown(f"### 📍 {r['nome']} ⭐ {r['score']}")
             st.write(f"**Reputação:** {r['reputacao']} | **Trânsito:** {r['transito']} | **Carga:** {r['capacidade']}")
@@ -209,6 +260,19 @@ with tab1:
             st.markdown("---")
 
 with tab2:
+    st.header("🏨 Planejador Fluxo Hotéis")
+    st.write("Escolha sua hospedagem:")
+    hotel_escolhido = st.selectbox("Hotéis disponíveis", list(hoteis_db.keys()))
+    if hotel_escolhido:
+        dados = hoteis_db[hotel_escolhido]
+        st.info(f"💡 {hotel_escolhido} - Categoria: {'⭐' * dados['estrelas']}")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.link_button("🔍 Pesquisar no Google", dados['google'])
+        with col2:
+            st.link_button("✈️ Tripadvisor", dados['tripadvisor'])
+
+with tab3:
     st.header("📜 Fluxo do Viajante em Foz")
     st.subheader("📎 Meu Diário de Viagem")
     col_input, col_mapa = st.columns([1, 2])
@@ -226,6 +290,23 @@ with tab2:
             folium.Marker([atrativos_db[nome]["latitude"], atrativos_db[nome]["longitude"]], popup=nome).add_to(mapa)
         st_folium(mapa, use_container_width=True)
 
-with tab3:
+with tab4:
     st.header("🧠 Entenda a Inteligência do FluxoTur")
-    st.write("O FluxoTur é classificado como uma inteligência artificial não generativa por não criar novos conteúdos ou textos de forma autônoma a partir de padrões probabilísticos. Diferente dos modelos de linguagem que geram respostas criativas e imprevisíveis, o sistema opera estritamente com base em lógica determinística e regras de negócio predefinidas. Isso significa que, para cada entrada específica, a ferramenta processa os dados de uma base estruturada e segue algoritmos de cálculo fixos, o que garante que as recomendações sejam sempre baseadas em critérios técnicos e objetivos. O resultado final é uma experiência de planejamento turístico altamente consistente, confiável e alinhada com as informações reais dos atrativos cadastrados no sistema, evitando alucinações ou variações indesejadas no roteiro sugerido ao usuário.")
+    
+    st.subheader("O que é uma IA não generativa?")
+    st.write("""
+    Ao contrário das IAs generativas (como o ChatGPT), que criam novos conteúdos ou textos baseados em 
+    probabilidades e previsões, a **IA não generativa** opera estritamente com base em **lógica determinística** e regras de negócio predefinidas. Isso significa que o sistema processa dados de uma base estruturada 
+    e segue algoritmos de cálculo fixos, garantindo que as recomendações sejam sempre baseadas em critérios 
+    técnicos objetivos, consistentes e sem o risco de gerar informações inventadas (alucinações).
+    """)
+    
+    st.subheader("Funcionalidade do FluxoTur")
+    st.write("""
+    O FluxoTur é um sistema de suporte à decisão turística desenvolvido para otimizar a experiência do 
+    viajante em Foz do Iguaçu. Suas principais funcionalidades incluem:
+    * **Planejamento Inteligente:** Seleção de atrativos e hotéis baseada em scores calculados por variáveis reais, como reputação e fluxo de carga.
+    * **Gestão de Logística:** Criação de diários de viagem personalizados com horários e anotações.
+    * **Geolocalização:** Integração visual com mapas para facilitar a localização e o deslocamento entre os pontos de interesse na região.
+    * **Acessibilidade:** Suporte integrado de tradução para Libras, garantindo que a informação seja acessível a todos os usuários.
+    """)
